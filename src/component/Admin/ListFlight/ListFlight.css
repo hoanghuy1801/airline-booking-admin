@@ -1,0 +1,40 @@
+.icon-filter {
+    color: #006885;
+    margin-top: 20px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+.btn-apply {
+    background-color: #006885;
+    color: white;
+    font-weight: 500;
+    font-size: 15px;
+
+    &:hover {
+        border-color: #006885 !important;
+        color: white !important;
+    }
+}
+.btn-save {
+    background-color: #006885;
+    color: white;
+    padding: 0px 20px 0px 20px !important;
+    margin-left: 20px;
+
+    font-weight: 500;
+    font-size: 15px;
+    &:hover {
+        border-color: #006885 !important;
+        color: white !important;
+    }
+}
+.btn-del {
+    border-color: #006885 !important;
+    color: #006885;
+    font-weight: 500;
+    margin-right: 10px;
+    &:hover {
+        border-color: #006885 !important;
+        color: #006885 !important;
+    }
+}

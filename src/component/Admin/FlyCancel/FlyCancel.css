@@ -1,0 +1,32 @@
+.btn-confirm {
+    height: auto;
+    width: auto;
+    margin: 20px 0px 0px 10px;
+    background-color: #006885;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    border: none !important;
+    &:hover {
+        border: none !important;
+        color: white !important;
+    }
+}
+.titles-admin {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 100px !important;
+}
+.input-seach-admin {
+    height: 10px;
+    width: 10%;
+}
+:where(.css-dev-only-do-not-override-18iikkb).ant-btn-primary {
+    background-color: #006885 !important;
+    font-size: 18px !important;
+    font-weight: 500 !important;
+}
+.table {
+    width: 100%;
+    padding-left: 10px;
+}

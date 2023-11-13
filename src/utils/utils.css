@@ -1,0 +1,15 @@
+.custom-ok-button{
+    background-color: #006885;
+    font-size: 16px;
+    height: auto;
+    font-weight: 500;
+    &:hover{
+        background-color: #006885 !important;
+    }
+}
+.ant-modal-confirm-title{
+    font-size: 20px !important;
+}
+.ant-modal-confirm-content{
+    font-size: 17px !important;
+}

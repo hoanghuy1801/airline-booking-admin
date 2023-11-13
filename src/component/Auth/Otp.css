@@ -1,0 +1,85 @@
+:root {
+    font-family: "Inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .app {
+    display: flex;
+    gap: 2rem;
+    flex-direction: column;
+    align-items: center;
+    background-image: url('../../assets/BackRoud.png');
+    width: 100vw;
+    height: 911px;
+    background-size: cover;
+    padding: 8% 32% 0 32%;
+  }
+  
+  .card {
+    background-color: rgb(255, 255, 255,0.33);
+    box-shadow: 0px 8px 32px #006885;
+    backdrop-filter: blur(3px);
+    padding: 0px 60px 20px 70px;
+    border-radius: 20px;
+  }
+  
+  .card > h2 {
+    text-align: center;
+    margin: 2rem 0 2rem;
+    color: #006885;
+    
+  }
+  .card{
+    .form-text{
+      display: flex;
+      margin: 0 0 1rem 0 ;
+      justify-content: center;
+    }
+    .text-information{
+      font-size: 17px;
+      text-align: center;
+      font-weight: 500;
+    }
+    .text-email{
+      font-size: 20px;
+      color: #006885;
+      font-weight: 500;
+    }
+    .text-not{
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .text-sendTo{
+      color: #006885;
+      cursor: pointer;
+    }
+    .text-back{
+      padding-top: 20px;
+      color: #006885;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+  }
+  .btn-accuracy{
+    background-color: #006885;
+    font-size: 17px;
+    height: auto;
+    font-weight: 600;
+    &:hover{
+      background-color: #006885 !important;
+    }
+  }
+  
+  .center-error-message:where(.ant-form-item) .ant-form-item-explain-error {
+    text-align: center;
+  }
+  
+  .input-classname {
+    border-radius: 16px;
+  }
+  
+  .wrapper-classname {
+    gap: 4px;
+    margin-bottom: 24px;
+  }
+  

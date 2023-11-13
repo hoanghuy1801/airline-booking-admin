@@ -1,0 +1,47 @@
+.input-search {
+    width: 350px;
+    padding: 10px 0px 20px 10px;
+    \
+}
+.title-admin {
+    font-size: 22px;
+    font-weight: 600;
+}
+.btn-create {
+    width: 100px;
+    height: 40px;
+    margin: 10px 0px 20px 10px;
+    background-color: #006885;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    &:hover {
+        border: none !important;
+        color: white !important;
+    }
+}
+.btn-edit {
+    background-color: #006885;
+    height: 40px;
+    width: 50px !important;
+    &:hover {
+        border: none !important;
+    }
+}
+.btn-delete {
+    background-color: red;
+    height: 40px;
+    width: 50px !important;
+}
+.icon {
+    color: white;
+}
+button.ant-btn.css-dev-only-do-not-override-17a39f8.ant-btn-primary.ant-btn-lg.ant-input-search-button {
+    background-color: #006885;
+    font-size: 18px;
+    font-weight: 600;
+}
+.table {
+    border: 1px solid #006885;
+    border-radius: 5px;
+}

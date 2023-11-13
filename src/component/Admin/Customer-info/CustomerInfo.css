@@ -1,0 +1,28 @@
+.form-btn {
+    display: flex;
+    justify-content: end;
+    padding-right: 50px;
+    .btn-cancel {
+        width: auto;
+        height: auto;
+        padding: 10px 15px 10px 15px;
+        font-size: 18px;
+        color: #006885;
+        font-weight: 500;
+        margin-right: 10px;
+    }
+    .btn-save {
+        width: auto;
+        height: auto;
+        padding: 10px 15px 10px 15px;
+        font-size: 18px;
+        color: white;
+        background-color: #006885;
+        font-weight: 500;
+    }
+}
+.avata-admin {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

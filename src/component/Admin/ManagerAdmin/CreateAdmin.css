@@ -1,0 +1,27 @@
+.form-create {
+    margin: 2% 35% 0% 35%;
+    box-shadow: 0px 10px 32px #006885;
+    padding: 30px 50px 20px 50px;
+    border-radius: 10px;
+    background-color: #f6f7f6;
+}
+.text {
+    padding-right: 20px;
+}
+.input {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+.btncreate {
+    height: 50px;
+    width: 300px;
+    margin: 20px 0px 0px 50px;
+    background-color: #006885;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    &:hover {
+        border: none !important;
+        color: white !important;
+    }
+}
