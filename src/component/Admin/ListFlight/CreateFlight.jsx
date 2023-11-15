@@ -141,6 +141,7 @@ const CreateFlight = () => {
                                 showSearch
                                 style={{ width: '90%' }}
                                 onChange={onChangeSourceAirport}
+                                size='large'
                                 filterOption={(input, option) =>
                                     (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
                                 }
@@ -166,6 +167,7 @@ const CreateFlight = () => {
                                 showSearch
                                 style={{ width: '90%' }}
                                 onChange={onDestinationAirport}
+                                size='large'
                                 filterOption={(input, option) =>
                                     (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
                                 }
@@ -192,6 +194,7 @@ const CreateFlight = () => {
                                 style={{
                                     width: '90%'
                                 }}
+                                size='large'
                                 showTime
                                 onOk={onOk}
                                 format='HH:mm DD/MM/YYYY '
@@ -203,6 +206,7 @@ const CreateFlight = () => {
                                 style={{
                                     width: '90%'
                                 }}
+                                size='large'
                                 showTime
                                 onOk={onOksetArrivalDate}
                                 format='HH:mm DD/MM/YYYY '
@@ -213,6 +217,7 @@ const CreateFlight = () => {
                                 style={{
                                     width: '90%'
                                 }}
+                                size='large'
                                 onChange={onAircraft}
                                 filterOption={(input, option) =>
                                     (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
@@ -242,6 +247,7 @@ const CreateFlight = () => {
                                 style={{
                                     width: '90%'
                                 }}
+                                size='large'
                                 onChange={onFlightType}
                                 options={[
                                     {

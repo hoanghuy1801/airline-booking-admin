@@ -12,14 +12,9 @@ import '../styles/main.css'
 function Main({ children }) {
     const [visible, setVisible] = useState(false)
     const [placement, setPlacement] = useState('right')
-    const [sidenavColor, setSidenavColor] = useState('red')
+    const [sidenavColor, setSidenavColor] = useState('#1890ff')
     const [sidenavType, setSidenavType] = useState('transparent')
     const [fixed, setFixed] = useState(false)
-
-    const openDrawer = () => setVisible(!visible)
-    const handleSidenavType = (type) => setSidenavType(type)
-    const handleSidenavColor = (color) => setSidenavColor(color)
-    const handleFixedNavbar = (type) => setFixed(type)
 
     let { pathname } = useLocation()
     pathname = pathname.replace('/', '')
@@ -60,7 +55,6 @@ function Main({ children }) {
                 </Affix>
 
                 <Content className='content-ant'>
-                    {' '}
                     <Outlet />
                 </Content>
             </Layout>

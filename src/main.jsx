@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
@@ -14,13 +15,20 @@ import CreateFlight from './component/Admin/ListFlight/CreateFlight.jsx'
 import EditFlight from './component/Admin/ListFlight/EditFlight.jsx'
 import Home from './component/Admin/pages/Home.jsx'
 import Main from './component/Admin/layout/Main.jsx'
+import SignIn from './component/Auth/SignIn.jsx'
+import Passenger from './component/Admin/passenger/Passenger.jsx'
+
 ReactDOM.createRoot(document.getElementById('root')).render(
     <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
             <BrowserRouter>
                 <Routes>
-                    <Route path='/' element={<Main />}>
-                        <Route index element={<Home />} />
+                    <Route path='/admins/signIn' element={<SignIn />} />
+                    <Route path='/' element={<SignIn />} />
+                </Routes>
+                <Routes>
+                    <Route path='/admins' element={<Main />}>
+                        <Route path='/admins/home' element={<Home />} />
                         <Route path='/admins/employee' element={<ManagerAdmin />} />
                         <Route path='/admins/employee/create' element={<CreateAdmin />} />
                         <Route path='/admins/employee/edit' element={<EditAdmin />} />
@@ -29,6 +37,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                         <Route path='/admins/flight/create' element={<CreateFlight />} />
                         <Route path='/admins/flight/edit' element={<EditFlight />} />
                         <Route path='/admins/customer-info' element={<CustomerInfo />} />
+                        <Route path='/admins/passenger' element={<Passenger />} />
                     </Route>
                 </Routes>
             </BrowserRouter>

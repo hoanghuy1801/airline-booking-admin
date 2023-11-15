@@ -70,9 +70,9 @@ function changeStatus(status, language) {
 function changeStatusAdmin(status, vi) {
     const statusTexts = {
         vi: {
-            ACT: 'Hoạt động',
-            PEN: 'Tạm ngưng',
-            DEL: 'Đã xóa'
+            ACT: 'Hoạt Động',
+            PEN: 'Tạm Ngưng',
+            DEL: 'Đã Hủy'
         }
     }
 

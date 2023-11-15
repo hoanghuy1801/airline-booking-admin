@@ -45,7 +45,6 @@ const CustomerInfo = () => {
     const handleGender = (value) => {
         setGender(value)
     }
-    console.log('InforEmployee', InforEmployee)
     const handleContinue = async () => {
         const data = {
             name: name,
@@ -107,6 +106,7 @@ const CustomerInfo = () => {
                                 style={{
                                     width: '90%'
                                 }}
+                                size='large'
                             />
                         </Form.Item>
                         <Form.Item name='gender' label='Giới Tính:' onChange={(event) => setGender(event.target.value)}>
@@ -115,6 +115,7 @@ const CustomerInfo = () => {
                                 style={{
                                     width: '90%'
                                 }}
+                                size='large'
                                 onChange={handleGender}
                                 options={[
                                     {
@@ -176,6 +177,7 @@ const CustomerInfo = () => {
                                 defaultValue={InforEmployee?.country}
                                 style={{ width: '90%', fontSize: 16, fontWeight: 500 }}
                                 optionFilterProp='children'
+                                size='large'
                                 onChange={onChangecountries}
                                 filterOption={(input, option) => (option?.label ?? '').includes(input)}
                                 filterSort={(optionA, optionB) =>

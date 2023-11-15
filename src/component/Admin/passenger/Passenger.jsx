@@ -2,8 +2,15 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Table, Space, Input, Row, Col, Button, Mentions, Menu, Tag, Dropdown, Typography } from 'antd'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
-import './ManagerAdmin.css'
-import { actEmployee, getEmployeeId, getListEmployee, penEmployee } from '../../../services/apiAdmin'
+
+import {
+    actEmployee,
+    getEmployeeId,
+    getListEmployee,
+    getListPassgenger,
+    penEmployee,
+    updateStatusPassenger
+} from '../../../services/apiAdmin'
 import { openNotification } from '../../../utils/Notification'
 import { changeStatusAdmin } from '../../../utils/utils'
 import { formatDateString } from '../../../utils/format'
@@ -48,14 +55,14 @@ const items = [
     }
 ]
 
-const ManagerAdmin = () => {
-    const [listEmployee, setListEmployee] = useState([])
+const Passenger = () => {
+    const [listPassgenger, setListPassgenger] = useState([])
     const [currentPage, setCurrentPage] = useState(1)
     const [textSearch, setTextSearch] = useState('')
     const [totalCount, SetTotalCount] = useState(0)
-    const [status, setStatus] = useState('')
+    const [status, setStatus] = useState('ALL')
     const dispastch = useDispatch()
-    const dataSource = listEmployee.map((item, index) => ({
+    const dataSource = listPassgenger.map((item, index) => ({
         ...item,
         stt: index + currentPage * 10 - 9
     }))
@@ -64,10 +71,10 @@ const ManagerAdmin = () => {
         key: item.id // Sử dụng ID của nhân viên làm giá trị key
     }))
     useEffect(() => {
-        fechListEmpoyee()
+        fechListPassgenger()
     }, [currentPage, status, textSearch])
 
-    const fechListEmpoyee = async () => {
+    const fechListPassgenger = async () => {
         const data = {
             page: currentPage,
             size: 10,
@@ -75,8 +82,8 @@ const ManagerAdmin = () => {
             searchText: textSearch
         }
         try {
-            let res = await getListEmployee(data)
-            setListEmployee(res.data.items)
+            let res = await getListPassgenger(data)
+            setListPassgenger(res.data.items)
             SetTotalCount(res.data.totalCount)
         } catch (e) {
             openNotification('error', 'Thông báo', e.response.data.error.message)
@@ -95,21 +102,28 @@ const ManagerAdmin = () => {
             }
         },
         {
-            title: 'MÃ NHÂN VIÊN',
-            dataIndex: 'employeeCode',
+            title: 'HỌ& TÊN',
+            dataIndex: 'firstName',
+            render: (value, _record) => {
+                return _record?.firstName + ' ' + _record?.lastName
+            },
             sorter: (a, b) => {
-                return a.employeeCode.localeCompare(b.employeeCode)
+                let nameA = a?.firstName + ' ' + a?.lastName
+                let nameB = b?.firstName + ' ' + b?.lastName
+                return nameA.localeCompare(nameB)
+            },
+
+            width: 200
+        },
+        {
+            title: 'MÃ KHÁCH HÀNG',
+            dataIndex: 'passengerCode',
+            sorter: (a, b) => {
+                return a.passengerCode.localeCompare(b.passengerCode)
             },
             width: 170
         },
-        {
-            title: 'HỌ TÊN',
-            dataIndex: 'name',
-            sorter: (a, b) => {
-                return a.name.localeCompare(b.name)
-            },
-            width: 190
-        },
+
         {
             title: 'SỐ ĐIỆN THOẠI',
             dataIndex: 'phoneNumber',
@@ -125,7 +139,7 @@ const ManagerAdmin = () => {
             sorter: (a, b) => {
                 return a.email.localeCompare(b.email)
             },
-            width: 150,
+            width: 160,
             align: 'end'
         },
         {
@@ -134,26 +148,9 @@ const ManagerAdmin = () => {
             sorter: (a, b) => {
                 return a.email.localeCompare(b.email)
             },
-            width: 200
+            width: 250
         },
-        {
-            title: 'CHỨC VỤ',
-            dataIndex: 'user?.userType',
-            render: (value, _record) => {
-                let userType = null
-                if (!_record.user) {
-                    return 'Không xác định'
-                }
-                if (_record.user.userType === 'MANAGER') {
-                    userType = 'Quản lý'
-                } else {
-                    userType = 'Nhân viên'
-                }
-                return userType
-            },
 
-            width: 130
-        },
         {
             title: 'NGÀY TẠO',
             dataIndex: 'createdAt',
@@ -233,19 +230,24 @@ const ManagerAdmin = () => {
     }
     const handleClickMe = async (id, code, e) => {
         if (e.key === 'act') {
+            let data = {
+                status: 'ACT'
+            }
             try {
-                await actEmployee(id)
-                fechListEmpoyee()
-                openNotification('success', 'Thông báo', `Đã Hoạt Động Nhân Viên ${code}`)
+                await updateStatusPassenger(id, data)
+                fechListPassgenger()
+                openNotification('success', 'Thông báo', `Đã Hoạt Động Khách Hàng ${code}`)
             } catch (e) {
                 openNotification('error', 'Thông báo', e.response.data.error.message)
             }
         } else if (e.key === 'pen') {
+            let data = {
+                status: 'PEN'
+            }
             try {
-                await penEmployee(id).then(async () => {
-                    fechListEmpoyee()
-                    openNotification('success', 'Thông báo', `Đã Tạm Ngưng Nhân Viên ${code}`)
-                })
+                await updateStatusPassenger(id, data)
+                fechListPassgenger()
+                openNotification('success', 'Thông báo', `Đã Tạm Ngưng Khách Hàng ${code}`)
             } catch (e) {
                 openNotification('error', 'Thông báo', e.response.data.error.message)
             }
@@ -256,14 +258,14 @@ const ManagerAdmin = () => {
         }
     }
     const handleSearch = () => {
-        fechListEmpoyee()
+        fechListPassgenger()
     }
     return (
         <div
             className='ant-card criclebox tablespace mb-24'
             style={{ background: '#fff', padding: '20px', borderRadius: 12 }}
         >
-            <Text className='titles-admin'>Danh Sách nhân viên</Text>
+            <Text className='titles-admin'>Danh Sách Khách Hàng</Text>
 
             <Menu
                 onClick={onClick}
@@ -281,8 +283,8 @@ const ManagerAdmin = () => {
                 <Col span={12} style={{ display: 'flex', justifyContent: 'end' }}>
                     <Input
                         className='input-search'
-                        placeholder='Nhập mã hoặc tên nhân viên'
-                        onChange={(event) => setTextSearch(event.target.value)}
+                        placeholder='Nhập mã hoặc tên khách hàng'
+                        onSearch={onSearch}
                         size='large'
                         style={{ marginTop: 10 }}
                     />
@@ -313,4 +315,4 @@ const ManagerAdmin = () => {
     )
 }
 
-export default ManagerAdmin
+export default Passenger

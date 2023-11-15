@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Table, Space, Input, Row, Col, Button, DatePicker, Menu, Tag, Select, Dropdown } from 'antd'
+import { Table, Space, Input, Row, Col, Button, DatePicker, Menu, Tag, Select, Dropdown, Typography } from 'antd'
 import { IconFilterFilled } from '@tabler/icons-react'
 import './ListFlight.css'
 import { useNavigate } from 'react-router-dom'
@@ -15,6 +15,7 @@ import { IconDotsVertical } from '@tabler/icons-react'
 import { useDispatch } from 'react-redux'
 import { setFlightById } from '../../../redux/reducers/Admin'
 
+const { Text } = Typography
 const itemss = [
     {
         label: 'Hoạt động',
@@ -93,6 +94,7 @@ const ListFlight = () => {
         ...item,
         stt: index + currentPage * 10 - 9
     }))
+
     const fechListFight = async () => {
         const data = {
             page: currentPage,
@@ -115,11 +117,12 @@ const ListFlight = () => {
         {
             title: 'STT',
             dataIndex: 'stt',
-            width: 70,
+            width: 60,
             sorter: {
                 compare: (a, b) => a.stt - b.stt,
                 multiple: 1
-            }
+            },
+            align: 'center'
         },
         {
             title: 'TÊN CHUYẾN BAY',
@@ -127,7 +130,7 @@ const ListFlight = () => {
             sorter: (a, b) => {
                 return a.flightCode.localeCompare(b.flightCode)
             },
-            width: 180
+            width: 170
         },
         {
             title: 'ĐIỂM ĐI',
@@ -161,7 +164,7 @@ const ListFlight = () => {
             render: (value, _record) => {
                 return formatTimeHHMM(value)
             },
-            width: 200
+            width: 180
         },
         {
             title: 'NGÀY HẠ CÁCH',
@@ -173,7 +176,7 @@ const ListFlight = () => {
             render: (value, _record) => {
                 return formatTimeHHMM(value)
             },
-            width: 200
+            width: 180
         },
         {
             title: 'NGÀY TẠO',
@@ -185,7 +188,8 @@ const ListFlight = () => {
             render: (value, _record) => {
                 return formatDateString(value)
             },
-            width: 170
+            width: 150,
+            align: 'center'
         },
         {
             title: 'LOẠI',
@@ -260,10 +264,7 @@ const ListFlight = () => {
             setCurrentPage(1)
         }
     }
-    // eslint-disable-next-line no-unused-vars
-    const onSearch = (value, _e, info) => {
-        setTextSearch(value)
-    }
+
     const onChangeDepartureDate = (dates, dateStrings) => {
         setDepartureDate(dateStrings)
     }
@@ -306,9 +307,10 @@ const ListFlight = () => {
     return (
         <div
             className='ant-card criclebox tablespace mb-24'
-            style={{ background: '#fff', padding: 20, borderRadius: 12 }}
+            style={{ background: '#fff', padding: '20px', borderRadius: 12 }}
         >
-            <p className='title-admin'>Danh Sách Chuyến Bay</p>
+            <Text className='titles-admin'>Danh Sách Chuyến Bay</Text>
+
             <Menu
                 onClick={onClick}
                 selectedKeys={[current]}
@@ -331,7 +333,7 @@ const ListFlight = () => {
                     <Input
                         className='input-search'
                         placeholder='Nhập tên chuyến bay'
-                        onSearch={onSearch}
+                        onChange={(event) => setTextSearch(event.target.value)}
                         style={{ marginTop: 10 }}
                     />
 
@@ -441,9 +443,6 @@ const ListFlight = () => {
                         pageSize: 10,
                         total: totalCount,
                         onChange: onChange
-                    }}
-                    scroll={{
-                        y: 540
                     }}
                     onChange={onChange}
                 />

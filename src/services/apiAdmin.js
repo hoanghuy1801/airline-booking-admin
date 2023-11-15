@@ -1,4 +1,8 @@
 import axios from '../utils/awiosCustomize'
+
+const postLogin = (data) => {
+    return axios.post('api/v1/auth/login', data)
+}
 const getAirports = () => {
     return axios.get('api/v1/airport/all')
 }
@@ -53,6 +57,21 @@ const getFlightId = (id) => {
 const editFlight = (id, data) => {
     return axios.put(`/api/v1/flight/${id}`, data)
 }
+const getListBooking = (status, data) => {
+    return axios.get(`/api/v1/booking/${status}`, {
+        params: data
+    })
+}
+const getListPassgenger = (data) => {
+    return axios.get('/api/v1/passenger', {
+        params: data
+    })
+}
+const updateStatusPassenger = (id, data) => {
+    return axios.patch(`/api/v1/passenger/${id}`, {
+        params: data
+    })
+}
 
 export {
     getAirports,
@@ -70,5 +89,9 @@ export {
     editEmployee,
     changeStatusFlight,
     getFlightId,
-    editFlight
+    editFlight,
+    postLogin,
+    getListBooking,
+    getListPassgenger,
+    updateStatusPassenger
 }
