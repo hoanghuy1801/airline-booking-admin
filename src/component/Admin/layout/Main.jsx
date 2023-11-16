@@ -28,11 +28,7 @@ function Main({ children }) {
     }, [pathname])
 
     return (
-        <Layout
-            className={`layout-dashboard ${pathname === 'profile' ? 'layout-profile' : ''} ${
-                pathname === 'rtl' ? 'layout-dashboard-rtl' : ''
-            }`}
-        >
+        <Layout className={`layout-dashboard ${pathname === 'profile' ? 'layout-profile' : ''} `}>
             <Sider
                 breakpoint='lg'
                 collapsedWidth='0'
@@ -40,7 +36,7 @@ function Main({ children }) {
                     console.log(collapsed, type)
                 }}
                 trigger={null}
-                width={250}
+                width={240}
                 theme='light'
                 className={`sider-primary ant-layout-sider-primary ${sidenavType === '#fff' ? 'active-route' : ''}`}
                 style={{ background: sidenavType }}

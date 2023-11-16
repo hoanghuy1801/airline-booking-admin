@@ -17,6 +17,7 @@ import Home from './component/Admin/pages/Home.jsx'
 import Main from './component/Admin/layout/Main.jsx'
 import SignIn from './component/Auth/SignIn.jsx'
 import Passenger from './component/Admin/passenger/Passenger.jsx'
+import EditPassenger from './component/Admin/passenger/EditPassenger.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <Provider store={store}>
@@ -38,6 +39,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                         <Route path='/admins/flight/edit' element={<EditFlight />} />
                         <Route path='/admins/customer-info' element={<CustomerInfo />} />
                         <Route path='/admins/passenger' element={<Passenger />} />
+                        <Route path='/admins/passenger/edit' element={<EditPassenger />} />
                     </Route>
                 </Routes>
             </BrowserRouter>

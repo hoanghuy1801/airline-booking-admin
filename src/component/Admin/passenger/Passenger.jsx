@@ -1,22 +1,14 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useMemo, useState } from 'react'
 import { Table, Space, Input, Row, Col, Button, Mentions, Menu, Tag, Dropdown, Typography } from 'antd'
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 
-import {
-    actEmployee,
-    getEmployeeId,
-    getListEmployee,
-    getListPassgenger,
-    penEmployee,
-    updateStatusPassenger
-} from '../../../services/apiAdmin'
+import { getListPassgenger, getPassengerById, updateStatusPassenger } from '../../../services/apiAdmin'
 import { openNotification } from '../../../utils/Notification'
 import { changeStatusAdmin } from '../../../utils/utils'
 import { formatDateString } from '../../../utils/format'
 import { IconDotsVertical } from '@tabler/icons-react'
 import { useDispatch } from 'react-redux'
-import { setEmployeeById } from '../../../redux/reducers/Admin'
+import { setEmployeeById, setInforPassenger } from '../../../redux/reducers/Admin'
 import { useNavigate } from 'react-router-dom'
 
 const { Text } = Typography
@@ -60,7 +52,7 @@ const Passenger = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [textSearch, setTextSearch] = useState('')
     const [totalCount, SetTotalCount] = useState(0)
-    const [status, setStatus] = useState('ALL')
+    const [status, setStatus] = useState('')
     const dispastch = useDispatch()
     const dataSource = listPassgenger.map((item, index) => ({
         ...item,
@@ -73,7 +65,6 @@ const Passenger = () => {
     useEffect(() => {
         fechListPassgenger()
     }, [currentPage, status, textSearch])
-
     const fechListPassgenger = async () => {
         const data = {
             page: currentPage,
@@ -188,7 +179,7 @@ const Passenger = () => {
                             key: item.key || index.toString()
                         })),
 
-                        onClick: (e) => handleClickMe(record.id, record.employeeCode, e)
+                        onClick: (e) => handleClickMe(record.id, record.passengerCode, e)
                     }}
                     trigger={['click']}
                 >
@@ -225,36 +216,28 @@ const Passenger = () => {
     const onChange = async (pagination, filters, sorter, extra) => {
         setCurrentPage(pagination.current)
     }
-    const onSearch = (value, _e, info) => {
-        setTextSearch(value)
-    }
+
     const handleClickMe = async (id, code, e) => {
         if (e.key === 'act') {
-            let data = {
-                status: 'ACT'
-            }
             try {
-                await updateStatusPassenger(id, data)
+                await updateStatusPassenger(id, 'ACT')
                 fechListPassgenger()
                 openNotification('success', 'Thông báo', `Đã Hoạt Động Khách Hàng ${code}`)
             } catch (e) {
                 openNotification('error', 'Thông báo', e.response.data.error.message)
             }
         } else if (e.key === 'pen') {
-            let data = {
-                status: 'PEN'
-            }
             try {
-                await updateStatusPassenger(id, data)
+                await updateStatusPassenger(id, 'PEN')
                 fechListPassgenger()
                 openNotification('success', 'Thông báo', `Đã Tạm Ngưng Khách Hàng ${code}`)
             } catch (e) {
                 openNotification('error', 'Thông báo', e.response.data.error.message)
             }
         } else if (e.key === 'edit') {
-            let res = await getEmployeeId(id)
-            dispastch(setEmployeeById(res.data))
-            navigate('/admins/employee/edit')
+            let res = await getPassengerById(id)
+            dispastch(setInforPassenger(res.data))
+            navigate('/admins/passenger/edit')
         }
     }
     const handleSearch = () => {
@@ -283,8 +266,8 @@ const Passenger = () => {
                 <Col span={12} style={{ display: 'flex', justifyContent: 'end' }}>
                     <Input
                         className='input-search'
-                        placeholder='Nhập mã hoặc tên khách hàng'
-                        onSearch={onSearch}
+                        placeholder='Nhập mã khách hàng'
+                        onChange={(event) => setTextSearch(event.target.value)}
                         size='large'
                         style={{ marginTop: 10 }}
                     />

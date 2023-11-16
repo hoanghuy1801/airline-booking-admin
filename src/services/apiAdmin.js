@@ -67,10 +67,23 @@ const getListPassgenger = (data) => {
         params: data
     })
 }
-const updateStatusPassenger = (id, data) => {
-    return axios.patch(`/api/v1/passenger/${id}`, {
-        params: data
-    })
+const updateStatusPassenger = (id, status) => {
+    return axios.patch(`/api/v1/passenger/${id}?status=${status}`)
+}
+const getPassengerById = (id) => {
+    return axios.get(`/api/v1/passenger/${id}`)
+}
+const editPassenger = (id, data) => {
+    return axios.put(`/api/v1/passenger/${id}`, data)
+}
+const reportClient = () => {
+    return axios.get('/api/v1/admin/report-client')
+}
+const get10BookingNew = () => {
+    return axios.get('api/v1/admin/booking-limit-ten')
+}
+const getRevenueInTwoYear = () => {
+    return axios.get('api/v1/admin/revenue-in-two-year')
 }
 
 export {
@@ -93,5 +106,10 @@ export {
     postLogin,
     getListBooking,
     getListPassgenger,
-    updateStatusPassenger
+    updateStatusPassenger,
+    getPassengerById,
+    editPassenger,
+    reportClient,
+    get10BookingNew,
+    getRevenueInTwoYear
 }

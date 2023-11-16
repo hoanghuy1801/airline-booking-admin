@@ -110,11 +110,10 @@ const EditAdmin = () => {
                         </Form.Item>
                         <Form.Item name='DateOfBirth' label='Ngày sinh:'>
                             <DatePicker
-                                // value={date}
-                                //  defaultValue={date}
                                 onChange={onDateOfBirth}
                                 format='DD/MM/YYYY'
                                 placeholder=''
+                                size='large'
                                 style={{
                                     width: '90%'
                                 }}
@@ -126,6 +125,7 @@ const EditAdmin = () => {
                                 style={{
                                     width: '90%'
                                 }}
+                                size='large'
                                 onChange={handleGender}
                                 options={[
                                     {
@@ -154,6 +154,7 @@ const EditAdmin = () => {
                                 style={{
                                     width: '90%'
                                 }}
+                                size='large'
                                 onChange={handleChange}
                                 options={[
                                     {
@@ -207,6 +208,7 @@ const EditAdmin = () => {
                                 onChange={onChangecountries}
                                 style={{ width: '90%', fontSize: 16, fontWeight: 500 }}
                                 optionFilterProp='children'
+                                size='large'
                                 filterOption={(input, option) => (option?.label ?? '').includes(input)}
                                 filterSort={(optionA, optionB) =>
                                     (optionA?.label ?? '')

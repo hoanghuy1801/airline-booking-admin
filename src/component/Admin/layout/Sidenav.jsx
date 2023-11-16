@@ -90,7 +90,12 @@ function Sidenav({ color }) {
                         <IconPlaneTilt
                             className='icon'
                             style={{
-                                color: page === 'admins/flight' ? color : ''
+                                color:
+                                    page === 'admins/flight' ||
+                                    page === 'admins/flight/create' ||
+                                    page === 'admins/flight/edit'
+                                        ? color
+                                        : ''
                             }}
                         />
 
@@ -114,7 +119,12 @@ function Sidenav({ color }) {
                         <IconBrandApplePodcast
                             className='icon'
                             style={{
-                                color: page === 'admins/passenger' ? color : ''
+                                color:
+                                    page === 'admins/passenger' ||
+                                    page === 'admins/passenger/create' ||
+                                    page === 'admins/passenger/edit'
+                                        ? color
+                                        : ''
                             }}
                         />
 

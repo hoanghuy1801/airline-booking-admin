@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import './FlyCancel.css'
 import { getListBooking } from '../../../services/apiAdmin'
 import { openNotification } from '../../../utils/Notification'
-import { changeStatusAdmin } from '../../../utils/utils'
+import { changeStatusAdmin, changeStatusCancelBooking } from '../../../utils/utils'
 import { formatCurrency, formatDateString } from '../../../utils/format'
 
 const { Text } = Typography
@@ -43,6 +43,7 @@ const FlyCancel = () => {
     const [textSearch, setTextSearch] = useState('')
     const [totalCount, SetTotalCount] = useState(0)
     const [status, setStatus] = useState('all')
+    const [disabled, setDisabled] = useState(false)
     useEffect(() => {
         fechListBooking()
     }, [currentPage, status])
@@ -65,8 +66,20 @@ const FlyCancel = () => {
         setCurrentPage(pagination.current)
     }
     const onClick = (e) => {
-        console.log('click ', e)
         setCurrent(e.key)
+        if (e.key === 'all') {
+            setStatus('all')
+            setCurrentPage(1)
+            setDisabled(false)
+        } else if (e.key === 'pen') {
+            setStatus('pen')
+            setCurrentPage(1)
+            setDisabled(false)
+        } else if (e.key === 'del') {
+            setStatus('del')
+            setCurrentPage(1)
+            setDisabled(true)
+        }
     }
 
     // eslint-disable-next-line no-unused-vars
@@ -92,7 +105,7 @@ const FlyCancel = () => {
                 return formatCurrency(value)
             },
             align: 'end',
-            width: 200
+            width: 150
         },
         {
             title: 'NGÀY ĐẶT VÉ',
@@ -128,14 +141,14 @@ const FlyCancel = () => {
             key: 'status',
             dataIndex: 'status',
             render: (_, { status }) => {
-                const color = status === 'ACT' ? 'green' : status === 'PEN' ? 'orange' : 'orange' // Determine color based on tag value
+                const color = status === 'PEN' ? 'green' : status === 'DEL' ? 'orange' : 'orange' // Determine color based on tag value
                 return (
                     <Tag color={color} key={status}>
-                        {changeStatusAdmin(status, 'vi')}
+                        {changeStatusCancelBooking(status, 'vi')}
                     </Tag>
                 )
             },
-            width: 150
+            width: 170
         }
     ]
     const handleSearch = () => {
@@ -159,7 +172,9 @@ const FlyCancel = () => {
             <Row>
                 <Col span={12}>
                     {' '}
-                    <Button className='btn-confirm'>Xác nhận</Button>
+                    <Button className='btn-confirm' disabled={disabled}>
+                        Xác nhận
+                    </Button>
                 </Col>
                 <Col span={12} style={{ display: 'flex', justifyContent: 'end' }}>
                     <Input

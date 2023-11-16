@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Card, Col, Row, Typography, Tooltip, Progress, Upload, message, Button, Timeline, Radio } from 'antd'
-import { ToTopOutlined, MenuUnfoldOutlined, RightOutlined } from '@ant-design/icons'
+import { ToTopOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 import Paragraph from 'antd/lib/typography/Paragraph'
 
 import Echart from '../chart/EChart'
@@ -17,11 +17,39 @@ import team1 from '../../../assets/images/team-1.jpg'
 import team2 from '../../../assets/images/team-2.jpg'
 import team3 from '../../../assets/images/team-3.jpg'
 import team4 from '../../../assets/images/team-4.jpg'
-import card from '../../../assets/images/info-card-1.jpg'
+import { get10BookingNew, getRevenueInTwoYear, reportClient } from '../../../services/apiAdmin'
+import { openNotification } from '../../../utils/Notification'
+import { formatCurrency, formatTimeHHMM } from '../../../utils/format'
 
 const Home = () => {
     const { Title, Text } = Typography
+    const [listReportClient, setListReportClient] = useState([])
+    const [listBookingNew, setListBookingNew] = useState([])
+    const [listRevenueInTwoYear, setListRevenueInTwoYear] = useState([])
+    useEffect(() => {
+        fechHome()
+    }, [])
+    const fechHome = async () => {
+        try {
+            let res = await reportClient()
 
+            setListReportClient(res.data)
+        } catch (e) {
+            openNotification('error', 'Thông báo', e.response.data.error.message)
+        }
+        try {
+            let r = await get10BookingNew()
+            setListBookingNew(r.data)
+        } catch (e) {
+            openNotification('error', 'Thông báo', e.response.data.error.message)
+        }
+        try {
+            let r = await getRevenueInTwoYear()
+            setListRevenueInTwoYear(r.data)
+        } catch (e) {
+            openNotification('error', 'Thông báo', e.response.data.error.message)
+        }
+    }
     const onChange = (e) => console.log(`radio checked:${e.target.value}`)
 
     const [reverse, setReverse] = useState(false)
@@ -83,29 +111,33 @@ const Home = () => {
     ]
     const count = [
         {
-            today: 'Doanh Thu Hôm Nay',
-            title: '$53,000',
-            persent: '+30%',
-            icon: dollor,
-            bnb: 'bnb2'
-        },
-        {
             today: 'Tổng Người Dùng',
-            title: '3,200',
+            title: `${listReportClient?.totalUser}`,
             persent: '+20%',
             icon: profile,
             bnb: 'bnb2'
         },
         {
             today: 'Người Dùng Mới Trong Tháng',
-            title: '+1,200',
+            title: `${listReportClient?.totalUserInMonth}`,
             persent: '-20%',
             icon: heart,
             bnb: 'redtext'
         },
         {
+            today: 'Doanh Thu Hôm Nay',
+            title: `${
+                listReportClient?.totalRevenue === undefined
+                    ? formatCurrency(0)
+                    : formatCurrency(listReportClient?.totalRevenue)
+            }`,
+            persent: '+30%',
+            icon: dollor,
+            bnb: 'bnb2'
+        },
+        {
             today: 'Tổng Mã Đặt Vé Trong Ngày',
-            title: '$13,200',
+            title: `${listReportClient?.totalOrderInDay}`,
             persent: '10%',
             icon: cart,
             bnb: 'bnb2'
@@ -227,53 +259,11 @@ const Home = () => {
         }
     ]
 
-    const timelineList = [
-        {
-            title: '$2,400 - Redesign store',
-            time: '09 JUN 7:20 PM',
-            color: 'green'
-        },
-        {
-            title: 'New order #3654323',
-            time: '08 JUN 12:20 PM',
-            color: 'green'
-        },
-        {
-            title: 'Company server payments',
-            time: '04 JUN 3:10 PM'
-        },
-        {
-            title: 'New card added for order #4826321',
-            time: '02 JUN 2:45 PM'
-        },
-        {
-            title: 'Unlock folders for development',
-            time: '18 MAY 1:30 PM'
-        },
-        {
-            title: 'New order #46282344',
-            time: '14 MAY 3:30 PM',
-            color: 'gray'
-        }
-    ]
-
-    const uploadProps = {
-        name: 'file',
-        action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-        headers: {
-            authorization: 'authorization-text'
-        },
-        onChange(info) {
-            if (info.file.status !== 'uploading') {
-                console.log(info.file, info.fileList)
-            }
-            if (info.file.status === 'done') {
-                message.success(`${info.file.name} file uploaded successfully`)
-            } else if (info.file.status === 'error') {
-                message.error(`${info.file.name} file upload failed.`)
-            }
-        }
-    }
+    const timelineList = listBookingNew.map((listBooking, index) => ({
+        title: `${formatCurrency(listBooking?.amountTotal)} - ${listBooking?.bookingCode}`,
+        time: `${formatTimeHHMM(listBooking?.createdAt)} `,
+        color: index < 2 ? 'green' : undefined
+    }))
 
     return (
         <>
@@ -301,36 +291,30 @@ const Home = () => {
                 </Row>
 
                 <Row gutter={[24, 0]}>
-                    <Col xs={24} sm={24} md={12} lg={12} xl={10} className='mb-24'>
+                    <Col xs={24} sm={24} md={24} lg={24} xl={12} className='mb-24'>
                         <Card bordered={false} className='criclebox h-full'>
-                            <Echart />
+                            <LineChart listRevenueInTwoYear={listRevenueInTwoYear} />
                         </Card>
                     </Col>
-                    <Col xs={24} sm={24} md={12} lg={12} xl={14} className='mb-24'>
+                    <Col xs={24} sm={24} md={24} lg={24} xl={12} className='mb-24'>
                         <Card bordered={false} className='criclebox h-full'>
-                            <LineChart />
+                            <Echart listRevenueInTwoYear={listRevenueInTwoYear} />
                         </Card>
                     </Col>
                 </Row>
-
                 <Row gutter={[24, 0]}>
-                    <Col xs={24} sm={24} md={12} lg={12} xl={12} className='mb-24'>
+                    <Col xs={24} sm={24} md={12} lg={12} xl={16} className='mb-24'>
                         <Card bordered={false} className='criclebox cardbody h-full'>
                             <div className='project-ant'>
                                 <div>
-                                    <Title level={5}>
-                                        chỗ này dùng api xem lý do hoàn hủy đơn(dùng chung api đang viết)
-                                    </Title>
-                                    <Paragraph className='lastweek'>
-                                        done this month<span className='blue'>40%</span>
-                                    </Paragraph>
+                                    <Title level={5}>Yêu Cầu Hủy/ Hoàn Tiền</Title>
                                 </div>
                                 <div className='ant-filtertabs'>
                                     <div className='antd-pro-pages-dashboard-analysis-style-salesExtra'>
                                         <Radio.Group onChange={onChange} defaultValue='a'>
-                                            <Radio.Button value='a'>ALL</Radio.Button>
-                                            <Radio.Button value='b'>ONLINE</Radio.Button>
-                                            <Radio.Button value='c'>STORES</Radio.Button>
+                                            <Radio.Button value='a'>Tất Cả</Radio.Button>
+                                            <Radio.Button value='b'>Chưa Xác Nhận</Radio.Button>
+                                            <Radio.Button value='c'>Đã Xác Nhận</Radio.Button>
                                         </Radio.Group>
                                     </div>
                                 </div>
@@ -339,10 +323,12 @@ const Home = () => {
                                 <table className='width-100'>
                                     <thead>
                                         <tr>
-                                            <th>COMPANIES</th>
-                                            <th>MEMBERS</th>
-                                            <th>BUDGET</th>
-                                            <th>COMPLETION</th>
+                                            <th>MÃ ĐẶT VÉ</th>
+                                            <th>TỔNG TIỀN</th>
+                                            <th>NGÀY ĐẶT VÉ</th>
+                                            <th>NGÀY GỬI YÊU CẦU</th>
+                                            <th>LÝ DO</th>
+                                            <th>TRẠNG THÁI</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -365,22 +351,12 @@ const Home = () => {
                                     </tbody>
                                 </table>
                             </div>
-                            <div className='uploadfile shadow-none'>
-                                <Upload {...uploadProps}>
-                                    <Button type='dashed' className='ant-full-box' icon={<ToTopOutlined />}>
-                                        <span className='click'>Click to Upload</span>
-                                    </Button>
-                                </Upload>
-                            </div>
                         </Card>
                     </Col>
-                    <Col xs={24} sm={24} md={12} lg={12} xl={12} className='mb-24'>
+                    <Col xs={24} sm={24} md={12} lg={12} xl={8} className='mb-24'>
                         <Card bordered={false} className='criclebox h-full'>
                             <div className='timeline-box'>
-                                <Title level={5}>api trả ra 10 mã booking mới nhất với giá tiền</Title>
-                                <Paragraph className='lastweek' style={{ marginBottom: 24 }}>
-                                    this month <span className='bnb2'>20%</span>
-                                </Paragraph>
+                                <Title level={5}>Booking Mới Nhất</Title>
 
                                 <Timeline pending='Recording...' className='timelinelist' reverse={reverse}>
                                     {timelineList.map((t, index) => (
@@ -390,8 +366,13 @@ const Home = () => {
                                         </Timeline.Item>
                                     ))}
                                 </Timeline>
-                                <Button type='primary' className='width-100' onClick={() => setReverse(!reverse)}>
-                                    {<MenuUnfoldOutlined />} REVERSE
+                                <Button
+                                    type='primary'
+                                    style={{ backgroundColor: '#006885' }}
+                                    className='width-100'
+                                    onClick={() => setReverse(!reverse)}
+                                >
+                                    {<MenuUnfoldOutlined />} ĐẢO NGƯỢC
                                 </Button>
                             </div>
                         </Card>

@@ -82,6 +82,20 @@ function changeStatusAdmin(status, vi) {
 
     return status // Giữ nguyên trạng thái nếu không tìm thấy phiên bản ngôn ngữ
 }
+function changeStatusCancelBooking(status, vi) {
+    const statusTexts = {
+        vi: {
+            PEN: 'Chưa Xác Nhận',
+            DEL: 'Đã Xác Nhận'
+        }
+    }
+
+    if (statusTexts[vi] && statusTexts[vi][status]) {
+        return statusTexts[vi][status]
+    }
+
+    return status // Giữ nguyên trạng thái nếu không tìm thấy phiên bản ngôn ngữ
+}
 const getAcronym = (name) => {
     if (name) {
         const acronym = name
@@ -93,4 +107,12 @@ const getAcronym = (name) => {
     }
     return ''
 }
-export { generateRandomID, calculateAge, convertGender, changeStatus, getAcronym, changeStatusAdmin }
+export {
+    generateRandomID,
+    calculateAge,
+    convertGender,
+    changeStatus,
+    getAcronym,
+    changeStatusAdmin,
+    changeStatusCancelBooking
+}
