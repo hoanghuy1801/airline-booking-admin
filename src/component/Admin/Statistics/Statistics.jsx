@@ -1,39 +1,22 @@
 import { useEffect, useState } from 'react'
 
-import { Card, Col, Row, Typography, Button, Timeline, Radio, Tag } from 'antd'
-import { MenuUnfoldOutlined } from '@ant-design/icons'
-
+import { Button, Card, Col, DatePicker, Row, Typography } from 'antd'
+import LocaleProvider from 'antd/es/locale'
 import Echart from '../chart/EChart'
-import LineChart from '../chart/LineChart'
-
-import { get10BookingNew, getListBooking, getRevenueInTwoYear, reportClient } from '../../../services/apiAdmin'
+import locale from 'antd/locale/vi_VN'
+import 'dayjs/locale/vi'
+import { get10BookingNew, getRevenueInTwoYear, reportClient } from '../../../services/apiAdmin'
 import { openNotification } from '../../../utils/Notification'
-import { formatCurrency, formatTimeHHMM } from '../../../utils/format'
-import { changeStatusAdmin, changeStatusCancelBooking } from '../../../utils/utils'
-
-const Home = () => {
-    const { Title, Text } = Typography
+import { formatCurrency } from '../../../utils/format'
+const { RangePicker } = DatePicker
+const Statistics = () => {
+    const { Title } = Typography
     const [listReportClient, setListReportClient] = useState([])
     const [listBookingNew, setListBookingNew] = useState([])
     const [listRevenueInTwoYear, setListRevenueInTwoYear] = useState([])
-    const [listBooking, setListBooking] = useState([])
-    const [status, setStatus] = useState('pen')
     useEffect(() => {
         fechHome()
-        fechListBooking()
-    }, [status])
-    const fechListBooking = async () => {
-        const data = {
-            page: 1,
-            size: 10
-        }
-        try {
-            let res = await getListBooking(status, data)
-            setListBooking(res.data.items)
-        } catch (e) {
-            openNotification('error', 'Thông báo', e.response.data.error.message)
-        }
-    }
+    }, [])
     const fechHome = async () => {
         try {
             let res = await reportClient()
@@ -55,10 +38,6 @@ const Home = () => {
             openNotification('error', 'Thông báo', e.response.data.error.message)
         }
     }
-    const onChange = (e) => {
-        setStatus(e.target.value)
-    }
-    const [reverse, setReverse] = useState(false)
 
     const dollor = [
         <svg width='22' height='22' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg' key={0}>
@@ -124,14 +103,14 @@ const Home = () => {
             bnb: 'bnb2'
         },
         {
-            today: 'Người Dùng Mới Trong Tháng',
+            today: 'Người Dùng Mới ',
             title: `${listReportClient?.totalUserInMonth}`,
             persent: '-20%',
             icon: heart,
             bnb: 'redtext'
         },
         {
-            today: 'Doanh Thu Hôm Nay',
+            today: 'Doanh Thu ',
             title: `${
                 listReportClient?.totalRevenue === undefined
                     ? formatCurrency(0)
@@ -142,30 +121,37 @@ const Home = () => {
             bnb: 'bnb2'
         },
         {
-            today: 'Tổng Mã Đặt Vé Trong Ngày',
+            today: 'Tổng Mã Đặt Vé ',
             title: `${listReportClient?.totalOrderInDay}`,
             persent: '10%',
             icon: cart,
             bnb: 'bnb2'
         }
     ]
-    const list = listBooking.map((listBooking) => ({
-        bookingCode: `${listBooking?.bookingCode}`,
-        total: `${formatCurrency(listBooking?.amountTotal)}`,
-        dateBooking: `${formatTimeHHMM(listBooking?.createdAt)} `,
-        dateCancel: `${formatTimeHHMM(listBooking?.updatedAt)} `,
-        reason: `${listBooking?.note}`,
-        status: `${listBooking?.status}`
-    }))
 
-    const timelineList = listBookingNew.map((listBooking, index) => ({
-        title: `${formatCurrency(listBooking?.amountTotal)} - ${listBooking?.bookingCode}`,
-        time: `${formatTimeHHMM(listBooking?.createdAt)} `,
-        color: index < 2 ? 'green' : undefined
-    }))
+    const hanldeApply = () => {
+        // fechListFight()
+    }
     return (
         <>
             <div className='layout-content'>
+                <Row
+                    className='ant-card '
+                    gutter={[24, 0]}
+                    style={{ margin: '10px 2px 12px 2px', padding: '17px 0px 17px 10px' }}
+                >
+                    {' '}
+                    <Col span={6}>
+                        <LocaleProvider locale={locale}>
+                            <RangePicker size='large' />
+                        </LocaleProvider>
+                    </Col>
+                    <Col span={4}>
+                        <Button className='btn-apply' onClick={() => hanldeApply()}>
+                            Áp Dụng
+                        </Button>
+                    </Col>
+                </Row>
                 <Row className='rowgap-vbox' gutter={[24, 0]}>
                     {count.map((c, index) => (
                         <Col key={index} xs={24} sm={24} md={12} lg={6} xl={6} className='mb-24'>
@@ -187,96 +173,14 @@ const Home = () => {
                         </Col>
                     ))}
                 </Row>
-
                 <Row gutter={[24, 0]}>
-                    <Col xs={24} sm={24} md={24} lg={24} xl={12} className='mb-24'>
+                    <Col xs={24} sm={24} md={24} lg={24} xl={24} className='mb-24'>
                         <Card bordered={false} className='criclebox h-full'>
-                            <LineChart listRevenueInTwoYear={listRevenueInTwoYear} />
-                        </Card>
-                    </Col>
-                    <Col xs={24} sm={24} md={24} lg={24} xl={12} className='mb-24'>
-                        <Card bordered={false} className='criclebox h-full'>
+                            <DatePicker picker='year' placeholder='Chọn Năm' />
+                            <Button className='btn-apply' onClick={() => hanldeApply()}>
+                                Áp Dụng
+                            </Button>
                             <Echart listRevenueInTwoYear={listRevenueInTwoYear} />
-                        </Card>
-                    </Col>
-                </Row>
-                <Row gutter={[24, 0]}>
-                    <Col xs={24} sm={24} md={12} lg={12} xl={16} className='mb-24'>
-                        <Card bordered={false} className='criclebox cardbody h-full'>
-                            <div className='project-ant'>
-                                <div>
-                                    <Title level={5}>Yêu Cầu Hủy/ Hoàn Tiền</Title>
-                                </div>
-                                <div className='ant-filtertabs'>
-                                    <div className='antd-pro-pages-dashboard-analysis-style-salesExtra'>
-                                        <Radio.Group onChange={onChange} defaultValue='pen'>
-                                            <Radio.Button value='pen'>Chưa Xác Nhận</Radio.Button>
-                                            <Radio.Button value='del'>Đã Xác Nhận</Radio.Button>
-                                        </Radio.Group>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='ant-list-box table-responsive'>
-                                <table className='width-100'>
-                                    <thead>
-                                        <tr>
-                                            <th>MÃ ĐẶT VÉ</th>
-                                            <th>TỔNG TIỀN</th>
-                                            <th>NGÀY ĐẶT VÉ</th>
-                                            <th>NGÀY GỬI YÊU CẦU</th>
-                                            <th>LÝ DO</th>
-                                            <th>TRẠNG THÁI</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {list.map((d, index) => (
-                                            <tr key={index}>
-                                                <td>
-                                                    <h7>{d.bookingCode}</h7>
-                                                </td>
-                                                <td>{d.total}</td>
-                                                <td>{d.dateBooking}</td>
-                                                <td>{d.dateCancel}</td>
-                                                <td>{d.reason}</td>
-
-                                                <td>
-                                                    <Tag color={d.status === 'PEN' ? 'green' : 'red'} key={d.status}>
-                                                        {d.status === 'PEN'
-                                                            ? 'Chưa Xác Nhận'
-                                                            : d.status === 'DEL'
-                                                            ? 'Đã Xác Nhận'
-                                                            : ''}
-                                                    </Tag>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </Card>
-                    </Col>
-                    <Col xs={24} sm={24} md={12} lg={12} xl={8} className='mb-24'>
-                        <Card bordered={false} className='criclebox h-full'>
-                            <div className='timeline-box'>
-                                <Title level={5}>Booking Mới Nhất</Title>
-
-                                <Timeline pending='Recording...' className='timelinelist' reverse={reverse}>
-                                    {timelineList.map((t, index) => (
-                                        <Timeline.Item color={t.color} key={index}>
-                                            <Title level={5}>{t.title}</Title>
-                                            <Text>{t.time}</Text>
-                                        </Timeline.Item>
-                                    ))}
-                                </Timeline>
-                                <Button
-                                    type='primary'
-                                    style={{ backgroundColor: '#006885' }}
-                                    className='width-100'
-                                    onClick={() => setReverse(!reverse)}
-                                >
-                                    {<MenuUnfoldOutlined />} ĐẢO NGƯỢC
-                                </Button>
-                            </div>
                         </Card>
                     </Col>
                 </Row>
@@ -285,4 +189,4 @@ const Home = () => {
     )
 }
 
-export default Home
+export default Statistics

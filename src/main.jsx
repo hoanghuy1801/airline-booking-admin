@@ -18,6 +18,15 @@ import Main from './component/Admin/layout/Main.jsx'
 import SignIn from './component/Auth/SignIn.jsx'
 import Passenger from './component/Admin/passenger/Passenger.jsx'
 import EditPassenger from './component/Admin/passenger/EditPassenger.jsx'
+import CreatePassenger from './component/Admin/passenger/CreatePassenger.jsx'
+
+import MainStatistics from './component/Admin/pages/MainStatistics.jsx'
+import Statistics from './component/Admin/Statistics/Statistics.jsx'
+import TicketSales from './component/Admin/Statistics/TicketSales.jsx'
+import PopularFlight from './component/Admin/Statistics/popularFlight.jsx'
+import TicketClassRevenue from './component/Admin/Statistics/TicketClassRevenue.jsx'
+import Test from './component/Admin/test.jsx'
+import BookingCode from './component/Admin/BookingCode/BookingCode.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <Provider store={store}>
@@ -30,6 +39,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                 <Routes>
                     <Route path='/admins' element={<Main />}>
                         <Route path='/admins/home' element={<Home />} />
+                        <Route path='/admins/test' element={<Test />} />
                         <Route path='/admins/employee' element={<ManagerAdmin />} />
                         <Route path='/admins/employee/create' element={<CreateAdmin />} />
                         <Route path='/admins/employee/edit' element={<EditAdmin />} />
@@ -39,7 +49,15 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                         <Route path='/admins/flight/edit' element={<EditFlight />} />
                         <Route path='/admins/customer-info' element={<CustomerInfo />} />
                         <Route path='/admins/passenger' element={<Passenger />} />
+                        <Route path='/admins/passenger/create' element={<CreatePassenger />} />
                         <Route path='/admins/passenger/edit' element={<EditPassenger />} />
+                        <Route path='/admins/booking' element={<BookingCode />} />
+                        <Route path='/admins/statistics' element={<MainStatistics />}>
+                            <Route path='/admins/statistics/overview' element={<Statistics />} />
+                            <Route path='/admins/statistics/ticket-sales' element={<TicketSales />} />
+                            <Route path='/admins/statistics/popular-flight' element={<PopularFlight />} />
+                            <Route path='/admins/statistics/ticket-class-revenue' element={<TicketClassRevenue />} />
+                        </Route>
                     </Route>
                 </Routes>
             </BrowserRouter>

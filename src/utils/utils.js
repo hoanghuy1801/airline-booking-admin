@@ -107,6 +107,22 @@ const getAcronym = (name) => {
     }
     return ''
 }
+function changeStatusBookingPayment(status, vi) {
+    const statusTexts = {
+        vi: {
+            PENDING: 'Chưa Thanh Toán',
+            SUCCESSFUL: 'Đã Thanh Toán',
+            FAILED: 'Thanh Toán Thất Bại',
+            CANCELED: 'Hủy'
+        }
+    }
+
+    if (statusTexts[vi] && statusTexts[vi][status]) {
+        return statusTexts[vi][status]
+    }
+
+    return status // Giữ nguyên trạng thái nếu không tìm thấy phiên bản ngôn ngữ
+}
 export {
     generateRandomID,
     calculateAge,
@@ -114,5 +130,6 @@ export {
     changeStatus,
     getAcronym,
     changeStatusAdmin,
-    changeStatusCancelBooking
+    changeStatusCancelBooking,
+    changeStatusBookingPayment
 }

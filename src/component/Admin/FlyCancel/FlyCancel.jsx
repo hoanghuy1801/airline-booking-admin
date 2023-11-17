@@ -3,19 +3,14 @@ import { useEffect, useState } from 'react'
 import { Button, Col, Input, Menu, Row, Table, Tag, Typography } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import './FlyCancel.css'
-import { getListBooking } from '../../../services/apiAdmin'
+import { getListBooking, updateCancelBooking } from '../../../services/apiAdmin'
 import { openNotification } from '../../../utils/Notification'
 import { changeStatusAdmin, changeStatusCancelBooking } from '../../../utils/utils'
 import { formatCurrency, formatDateString } from '../../../utils/format'
 
 const { Text } = Typography
-const { Search } = Input
 
 const items = [
-    {
-        label: 'Tất cả',
-        key: 'all'
-    },
     {
         label: 'Chưa xác nhận',
         key: 'pen'
@@ -26,29 +21,19 @@ const items = [
     }
 ]
 
-const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-        console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows)
-    },
-    getCheckboxProps: (record) => ({
-        disabled: record.name === 'Disabled User',
-        // Column configuration not to be checked
-        name: record.name
-    })
-}
 const FlyCancel = () => {
-    const [current, setCurrent] = useState('all')
+    const [current, setCurrent] = useState('pen')
     const [listBooking, setListBooking] = useState([])
+    const [checkListBooking, setCheckListBooking] = useState([])
     const [currentPage, setCurrentPage] = useState(1)
     const [textSearch, setTextSearch] = useState('')
     const [totalCount, SetTotalCount] = useState(0)
-    const [status, setStatus] = useState('all')
+    const [status, setStatus] = useState('pen')
     const [disabled, setDisabled] = useState(false)
     useEffect(() => {
         fechListBooking()
     }, [currentPage, status])
     const fechListBooking = async () => {
-        console.log('huy', currentPage)
         const data = {
             bookingCode: textSearch,
             page: currentPage,
@@ -65,13 +50,15 @@ const FlyCancel = () => {
     const onChange = (pagination, filters, sorter, extra) => {
         setCurrentPage(pagination.current)
     }
+    const rowSelection = {
+        onChange: (selectedRowKeys, selectedRows) => {
+            setCheckListBooking(selectedRows)
+        }
+    }
+
     const onClick = (e) => {
         setCurrent(e.key)
-        if (e.key === 'all') {
-            setStatus('all')
-            setCurrentPage(1)
-            setDisabled(false)
-        } else if (e.key === 'pen') {
+        if (e.key === 'pen') {
             setStatus('pen')
             setCurrentPage(1)
             setDisabled(false)
@@ -81,9 +68,11 @@ const FlyCancel = () => {
             setDisabled(true)
         }
     }
-
+    const dataSource = listBooking.map((item, index) => ({
+        ...item,
+        key: index + currentPage * 10 - 9
+    }))
     // eslint-disable-next-line no-unused-vars
-    const [selectionType, setSelectionType] = useState('checkbox')
 
     const columns = [
         {
@@ -154,6 +143,32 @@ const FlyCancel = () => {
     const handleSearch = () => {
         fechListBooking()
     }
+    const idList = checkListBooking.map((booking) => booking.id)
+    const handleConfirm = async () => {
+        let data = {
+            ids: idList,
+            status: 'DEL'
+        }
+        try {
+            await updateCancelBooking(data)
+            fechListBooking()
+            openNotification('success', 'Thông báo', `Đã Xác Nhận Hủy Mã Đặt Vé `)
+        } catch (e) {
+            openNotification('error', 'Thông báo', e.response.data.error.message)
+        }
+    }
+    const handleCancel = async () => {
+        let data = {
+            ids: idList,
+            status: 'ACT'
+        }
+        try {
+            await updateCancelBooking(data)
+            fechListBooking()
+        } catch (e) {
+            openNotification('error', 'Thông báo', e.response.data.error.message)
+        }
+    }
     return (
         <div
             className='main-admin ant-card criclebox tablespace mb-24'
@@ -172,8 +187,11 @@ const FlyCancel = () => {
             <Row>
                 <Col span={12}>
                     {' '}
-                    <Button className='btn-confirm' disabled={disabled}>
-                        Xác nhận
+                    <Button className='btn-confirm' disabled={disabled} onClick={() => handleConfirm()}>
+                        Xác Nhận
+                    </Button>
+                    <Button className='btn-confirm' disabled={disabled} onClick={() => handleCancel()}>
+                        Từ Chối
                     </Button>
                 </Col>
                 <Col span={12} style={{ display: 'flex', justifyContent: 'end' }}>
@@ -197,11 +215,10 @@ const FlyCancel = () => {
                 <div className='table' style={{ marginTop: 20 }}>
                     <Table
                         rowSelection={{
-                            type: selectionType,
                             ...rowSelection
                         }}
                         columns={columns}
-                        dataSource={listBooking}
+                        dataSource={dataSource}
                         pagination={{
                             current: currentPage,
                             pageSize: 10,

@@ -5,7 +5,6 @@ import { formatCurrency } from '../../../utils/format'
 
 function EChart(props) {
     const { listRevenueInTwoYear } = props
-    console.log('listRevenueInTwoYear', listRevenueInTwoYear)
     const { Title } = Typography
     const currentYear = new Date().getFullYear()
 

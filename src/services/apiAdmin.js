@@ -85,6 +85,20 @@ const get10BookingNew = () => {
 const getRevenueInTwoYear = () => {
     return axios.get('api/v1/admin/revenue-in-two-year')
 }
+const updateCancelBooking = (data) => {
+    return axios.patch('api/v1/booking/change-status', data)
+}
+const getBooking = (status, data) => {
+    return axios.get(`api/v1/booking/admin/${status}`, {
+        params: data
+    })
+}
+const CancelBooking = (data) => {
+    return axios.patch('/api/v1/booking/cancel', data)
+}
+const CreatePassenger = (data) => {
+    return axios.post('/api/v1/passenger', data)
+}
 
 export {
     getAirports,
@@ -111,5 +125,9 @@ export {
     editPassenger,
     reportClient,
     get10BookingNew,
-    getRevenueInTwoYear
+    getRevenueInTwoYear,
+    updateCancelBooking,
+    getBooking,
+    CancelBooking,
+    CreatePassenger
 }

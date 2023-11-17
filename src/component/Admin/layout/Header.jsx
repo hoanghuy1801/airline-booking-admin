@@ -2,7 +2,7 @@
 import { useEffect } from 'react'
 import { DownOutlined } from '@ant-design/icons'
 import { Row, Col, Breadcrumb, Typography, Dropdown, Space } from 'antd'
-import { IconUserCog, IconUser, IconPlaneTilt, IconCaretLeft } from '@tabler/icons-react'
+import { IconUser, IconUserSquareRounded, IconCaretLeft } from '@tabler/icons-react'
 import { NavLink, Link, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setInforEmployee } from '../../../redux/reducers/Admin'
@@ -41,7 +41,7 @@ const items = [
     }
 ]
 const profile = [
-    <svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg' key={0}>
+    <svg width='40' height='40' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg' key={0}>
         <path
             fillRule='evenodd'
             clipRule='evenodd'
@@ -67,26 +67,21 @@ function Header({ name }) {
     return (
         <div>
             <Row gutter={[24, 0]}>
-                <Col span={24} md={6}>
-                    <Breadcrumb>
-                        <Breadcrumb.Item>
-                            <NavLink to='/'>Chung</NavLink>
-                        </Breadcrumb.Item>
-                    </Breadcrumb>
-                </Col>
-                <Col span={24} md={18} className='header-control' style={{ paddingRight: '7%' }}>
+                <Col
+                    span={24}
+                    md={24}
+                    style={{ paddingRight: '7%', display: 'flex', justifyContent: 'end', cursor: 'pointer' }}
+                >
+                    <IconUserSquareRounded size={30} />
                     <Dropdown
                         menu={{
                             items,
                             onClick
                         }}
                     >
-                        <a onClick={(e) => e.preventDefault()}>
-                            {profile}
-                            <Space style={{ fontSize: 14, fontWeight: 500, color: 'black', paddingLeft: 10 }}>
-                                Pham Hoang Huy
-                            </Space>
-                        </a>
+                        <Space style={{ fontSize: 18, fontWeight: 600, color: 'black', paddingLeft: 10 }}>
+                            Pham Hoang Huy
+                        </Space>
                     </Dropdown>
                 </Col>
             </Row>

@@ -259,7 +259,7 @@ const Passenger = () => {
             />
             <Row>
                 <Col span={12}>
-                    <Button className='btn-create' onClick={() => navigate('/admins/employee/create')}>
+                    <Button className='btn-create' onClick={() => navigate('/admins/passenger/create')}>
                         Thêm
                     </Button>
                 </Col>

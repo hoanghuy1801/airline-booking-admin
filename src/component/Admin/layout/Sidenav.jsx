@@ -1,7 +1,14 @@
 import { Menu } from 'antd'
 import { NavLink, useLocation } from 'react-router-dom'
 import logo from '../../../assets/vivu.png'
-import { IconPlaneTilt, IconPlaneOff, IconUserFilled, IconBrandApplePodcast } from '@tabler/icons-react'
+import {
+    IconPlaneTilt,
+    IconPlaneOff,
+    IconUserFilled,
+    IconBrandApplePodcast,
+    IconChartBar,
+    IconTicket
+} from '@tabler/icons-react'
 function Sidenav({ color }) {
     const { pathname } = useLocation()
     const page = pathname.replace('/', '')
@@ -38,7 +45,6 @@ function Sidenav({ color }) {
             ></path>
         </svg>
     ]
-
     return (
         <>
             <div className='brand' style={{ marginLeft: 20 }}>
@@ -103,6 +109,23 @@ function Sidenav({ color }) {
                     </NavLink>
                 </Menu.Item>
                 <Menu.Item key='5'>
+                    <NavLink to='/admins/booking'>
+                        <IconTicket
+                            className='icon'
+                            style={{
+                                color:
+                                    page === 'admins/booking' ||
+                                    page === 'admins/flight/create' ||
+                                    page === 'admins/flight/edit'
+                                        ? color
+                                        : ''
+                            }}
+                        />
+
+                        <span className='label'>Đặt Vé</span>
+                    </NavLink>
+                </Menu.Item>
+                <Menu.Item key='6'>
                     <NavLink to='/admins/flyCancel'>
                         <IconPlaneOff
                             className='icon'
@@ -114,7 +137,7 @@ function Sidenav({ color }) {
                         <span className='label'>Hủy/Hoàn Tiền</span>
                     </NavLink>
                 </Menu.Item>
-                <Menu.Item key='6'>
+                <Menu.Item key='7'>
                     <NavLink to='/admins/passenger'>
                         <IconBrandApplePodcast
                             className='icon'
@@ -129,6 +152,37 @@ function Sidenav({ color }) {
                         />
 
                         <span className='label'>Khách Hàng</span>
+                    </NavLink>
+                </Menu.Item>
+                <Menu.Item key='8'>
+                    <NavLink
+                        to='/admins/statistics/overview'
+                        style={{
+                            backgroundColor:
+                                page === 'admins/statistics/ticket-sales' || page === 'admins/statistics/popular-flight'
+                                    ? '#fff'
+                                    : '',
+                            boxShadow: '0 20px 27px rgb(0 0 0 / 5%)'
+                        }}
+                    >
+                        <IconChartBar
+                            className='icon'
+                            style={{
+                                backgroundColor:
+                                    page === 'admins/statistics/ticket-sales' ||
+                                    page === 'admins/statistics/popular-flight'
+                                        ? color
+                                        : '',
+                                color:
+                                    page === 'admins/statistics/overview' ||
+                                    page === 'admins/statistics/ticket-sales' ||
+                                    page === 'admins/statistics/popular-flight'
+                                        ? color
+                                        : ''
+                            }}
+                        />
+
+                        <span className='label'>Thống Kê</span>
                     </NavLink>
                 </Menu.Item>
             </Menu>
