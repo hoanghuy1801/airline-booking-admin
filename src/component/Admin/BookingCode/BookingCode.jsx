@@ -4,7 +4,7 @@ import { IconFilterFilled } from '@tabler/icons-react'
 
 import { useNavigate } from 'react-router-dom'
 import { openNotification } from '../../../utils/Notification'
-import { CancelBooking, getBooking } from '../../../services/apiAdmin'
+import { CancelBooking, getBooking, getBookingById } from '../../../services/apiAdmin'
 import { changeStatusAdmin, changeStatusBookingPayment } from '../../../utils/utils'
 import { formatCurrency, formatDateString, formatTimeHHMM } from '../../../utils/format'
 import { getAirports } from '../../../services/apiAdmin'
@@ -13,6 +13,7 @@ import 'dayjs/locale/vi'
 import LocaleProvider from 'antd/es/locale'
 import { IconDotsVertical } from '@tabler/icons-react'
 import { useDispatch } from 'react-redux'
+import { setBookingById } from '../../../redux/reducers/Admin'
 
 const { Text } = Typography
 const itemss = [
@@ -25,14 +26,6 @@ const items = [
     {
         label: 'Tất Cả',
         key: 'all'
-    },
-    {
-        label: 'Hoạt Động',
-        key: 'act'
-    },
-    {
-        label: 'Đã Hủy',
-        key: 'pen'
     }
 ]
 const BookingCode = () => {
@@ -57,7 +50,7 @@ const BookingCode = () => {
     const navigate = useNavigate()
     useEffect(() => {
         fechListBooking()
-    }, [currentPage, status, textSearch])
+    }, [currentPage, textSearch])
     useEffect(() => {
         fechListAirports()
     }, [])
@@ -188,7 +181,7 @@ const BookingCode = () => {
                             key: item.key || index.toString()
                         })),
 
-                        onClick: (e) => handleClickMe(record.id, record.flightCode, e)
+                        onClick: (e) => handleClickMe(record.id, record.bookingCode, e)
                     }}
                     trigger={['click']}
                 >
@@ -236,7 +229,17 @@ const BookingCode = () => {
     }
     const idList = checkListBooking.map((booking) => booking.id)
     const bookingCodeList = checkListBooking.map((booking) => booking.bookingCode)
-    const handleClickMe = async (id, code, e) => {}
+    const handleClickMe = async (id, code, e) => {
+        if (e.key === 'edit') {
+            try {
+                let res = await getBookingById(id)
+                dispastch(setBookingById(res.data))
+                navigate('/admins/booking/edit')
+            } catch (e) {
+                openNotification('error', 'Thông báo', e.response.data.error.message)
+            }
+        }
+    }
     const handleSearch = () => {
         // fechListFight()
     }
@@ -316,11 +319,6 @@ const BookingCode = () => {
                                         <Row className='text-cityname'>
                                             {item.city.cityName} ({item.airportCode})
                                         </Row>
-                                        <Row>
-                                            <Col span={18} className='text-airportname'>
-                                                {item.airportName}
-                                            </Col>
-                                        </Row>
                                     </>
                                 </Option>
                             ))}
@@ -343,11 +341,6 @@ const BookingCode = () => {
                                     <>
                                         <Row className='text-cityname'>
                                             {item.city.cityName} ({item.airportCode})
-                                        </Row>
-                                        <Row>
-                                            <Col span={18} className='text-airportname'>
-                                                {item.airportName}
-                                            </Col>
                                         </Row>
                                     </>
                                 </Option>

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
@@ -19,14 +18,14 @@ import SignIn from './component/Auth/SignIn.jsx'
 import Passenger from './component/Admin/passenger/Passenger.jsx'
 import EditPassenger from './component/Admin/passenger/EditPassenger.jsx'
 import CreatePassenger from './component/Admin/passenger/CreatePassenger.jsx'
-
 import MainStatistics from './component/Admin/pages/MainStatistics.jsx'
 import Statistics from './component/Admin/Statistics/Statistics.jsx'
 import TicketSales from './component/Admin/Statistics/TicketSales.jsx'
-import PopularFlight from './component/Admin/Statistics/popularFlight.jsx'
+import PopularFlight from './component/Admin/Statistics/PopularFlight.jsx'
 import TicketClassRevenue from './component/Admin/Statistics/TicketClassRevenue.jsx'
 import Test from './component/Admin/test.jsx'
 import BookingCode from './component/Admin/BookingCode/BookingCode.jsx'
+import EditBooking from './component/Admin/BookingCode/EditBooking.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <Provider store={store}>
@@ -52,6 +51,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                         <Route path='/admins/passenger/create' element={<CreatePassenger />} />
                         <Route path='/admins/passenger/edit' element={<EditPassenger />} />
                         <Route path='/admins/booking' element={<BookingCode />} />
+                        <Route path='/admins/booking/edit' element={<EditBooking />} />
                         <Route path='/admins/statistics' element={<MainStatistics />}>
                             <Route path='/admins/statistics/overview' element={<Statistics />} />
                             <Route path='/admins/statistics/ticket-sales' element={<TicketSales />} />

@@ -4,7 +4,8 @@ const initialState = {
     isAuthenticatedEmployee: false,
     employeeById: null,
     flightById: null,
-    inforPassenger: ''
+    inforPassenger: '',
+    bookingById: null
 }
 const Admin = createSlice({
     name: 'Admin',
@@ -24,11 +25,20 @@ const Admin = createSlice({
         },
         setInforPassenger: (state, action) => {
             state.inforPassenger = action.payload
+        },
+        setBookingById: (state, action) => {
+            state.bookingById = action.payload
         }
     }
 })
 
-export const { setInforEmployee, setIsAuthenticatedEmployee, setEmployeeById, setFlightById, setInforPassenger } =
-    Admin.actions
+export const {
+    setInforEmployee,
+    setIsAuthenticatedEmployee,
+    setEmployeeById,
+    setFlightById,
+    setInforPassenger,
+    setBookingById
+} = Admin.actions
 // Export reducer
 export default Admin.reducer

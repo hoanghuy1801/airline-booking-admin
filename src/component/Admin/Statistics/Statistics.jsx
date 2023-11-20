@@ -1,39 +1,48 @@
 import { useEffect, useState } from 'react'
-
 import { Button, Card, Col, DatePicker, Row, Typography } from 'antd'
 import LocaleProvider from 'antd/es/locale'
-import Echart from '../chart/EChart'
 import locale from 'antd/locale/vi_VN'
 import 'dayjs/locale/vi'
-import { get10BookingNew, getRevenueInTwoYear, reportClient } from '../../../services/apiAdmin'
+import { statisticalClient, statisticalRevenue } from '../../../services/apiAdmin'
 import { openNotification } from '../../../utils/Notification'
 import { formatCurrency } from '../../../utils/format'
+import EChartStatistics from './EChartStatistics'
 const { RangePicker } = DatePicker
 const Statistics = () => {
     const { Title } = Typography
-    const [listReportClient, setListReportClient] = useState([])
-    const [listBookingNew, setListBookingNew] = useState([])
-    const [listRevenueInTwoYear, setListRevenueInTwoYear] = useState([])
+    const currentYear = new Date().getFullYear()
+    const firstDayOfYear = new Date(currentYear, 0, 1)
+    const lastDayOfYear = new Date(currentYear, 11, 31)
+    const formattedFirstDay = firstDayOfYear.toLocaleDateString('en-CA')
+    const formattedLastDay = lastDayOfYear.toLocaleDateString('en-CA')
+    const [listStatisticalClient, setListStatisticalClient] = useState([])
+    const [listRevenue, setListRevenue] = useState([])
+    const [fromDate, setFromDate] = useState(formattedFirstDay)
+    const [toDate, setToDate] = useState(formattedLastDay)
+    const [year, setYear] = useState(currentYear)
     useEffect(() => {
-        fechHome()
+        fechStatisticalClient()
+        fechRevenue()
     }, [])
-    const fechHome = async () => {
+    const fechRevenue = async () => {
+        let data = {
+            year: year
+        }
         try {
-            let res = await reportClient()
-
-            setListReportClient(res.data)
+            let res = await statisticalRevenue(data)
+            setListRevenue(res.data)
         } catch (e) {
             openNotification('error', 'Thông báo', e.response.data.error.message)
         }
-        try {
-            let r = await get10BookingNew()
-            setListBookingNew(r.data)
-        } catch (e) {
-            openNotification('error', 'Thông báo', e.response.data.error.message)
+    }
+    const fechStatisticalClient = async () => {
+        let data = {
+            fromDate: fromDate,
+            toDate: toDate
         }
         try {
-            let r = await getRevenueInTwoYear()
-            setListRevenueInTwoYear(r.data)
+            let res = await statisticalClient(data)
+            setListStatisticalClient(res.data)
         } catch (e) {
             openNotification('error', 'Thông báo', e.response.data.error.message)
         }
@@ -74,16 +83,6 @@ const Statistics = () => {
             <path d='M6 11C8.76142 11 11 13.2386 11 16V17H1V16C1 13.2386 3.23858 11 6 11Z' fill='#fff'></path>
         </svg>
     ]
-    const heart = [
-        <svg width='22' height='22' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg' key={0}>
-            <path
-                fillRule='evenodd'
-                clipRule='evenodd'
-                d='M3.17157 5.17157C4.73367 3.60948 7.26633 3.60948 8.82843 5.17157L10 6.34315L11.1716 5.17157C12.7337 3.60948 15.2663 3.60948 16.8284 5.17157C18.3905 6.73367 18.3905 9.26633 16.8284 10.8284L10 17.6569L3.17157 10.8284C1.60948 9.26633 1.60948 6.73367 3.17157 5.17157Z'
-                fill='#fff'
-            ></path>
-        </svg>
-    ]
     const cart = [
         <svg width='22' height='22' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg' key={0}>
             <path
@@ -97,24 +96,18 @@ const Statistics = () => {
     const count = [
         {
             today: 'Tổng Người Dùng',
-            title: `${listReportClient?.totalUser}`,
+            title: `${listStatisticalClient?.totalUser}`,
             persent: '+20%',
             icon: profile,
             bnb: 'bnb2'
         },
-        {
-            today: 'Người Dùng Mới ',
-            title: `${listReportClient?.totalUserInMonth}`,
-            persent: '-20%',
-            icon: heart,
-            bnb: 'redtext'
-        },
+
         {
             today: 'Doanh Thu ',
             title: `${
-                listReportClient?.totalRevenue === undefined
+                listStatisticalClient?.totalRevenue === undefined
                     ? formatCurrency(0)
-                    : formatCurrency(listReportClient?.totalRevenue)
+                    : formatCurrency(listStatisticalClient?.totalRevenue)
             }`,
             persent: '+30%',
             icon: dollor,
@@ -122,7 +115,7 @@ const Statistics = () => {
         },
         {
             today: 'Tổng Mã Đặt Vé ',
-            title: `${listReportClient?.totalOrderInDay}`,
+            title: `${listStatisticalClient?.totalOrder}`,
             persent: '10%',
             icon: cart,
             bnb: 'bnb2'
@@ -130,7 +123,17 @@ const Statistics = () => {
     ]
 
     const hanldeApply = () => {
-        // fechListFight()
+        fechStatisticalClient()
+    }
+    const hanldeApplyRevenue = () => {
+        fechRevenue()
+    }
+    const handleDateRangeChange = (dates, dateStrings) => {
+        setFromDate(dateStrings[0])
+        setToDate(dateStrings[1])
+    }
+    const handleDatePickerChange = (date, dateString) => {
+        setYear(dateString)
     }
     return (
         <>
@@ -143,7 +146,7 @@ const Statistics = () => {
                     {' '}
                     <Col span={6}>
                         <LocaleProvider locale={locale}>
-                            <RangePicker size='large' />
+                            <RangePicker size='large' format='DD/MM/YYYY' onChange={handleDateRangeChange} />
                         </LocaleProvider>
                     </Col>
                     <Col span={4}>
@@ -152,9 +155,13 @@ const Statistics = () => {
                         </Button>
                     </Col>
                 </Row>
-                <Row className='rowgap-vbox' gutter={[24, 0]}>
+                <Row
+                    className='rowgap-vbox'
+                    gutter={[24, 0]}
+                    style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
+                >
                     {count.map((c, index) => (
-                        <Col key={index} xs={24} sm={24} md={12} lg={6} xl={6} className='mb-24'>
+                        <Col key={index} xs={24} sm={24} md={12} lg={8} xl={8} className='mb-24'>
                             <Card bordered={false} className='criclebox '>
                                 <div className='number'>
                                     <Row align='middle' gutter={[24, 0]}>
@@ -176,11 +183,16 @@ const Statistics = () => {
                 <Row gutter={[24, 0]}>
                     <Col xs={24} sm={24} md={24} lg={24} xl={24} className='mb-24'>
                         <Card bordered={false} className='criclebox h-full'>
-                            <DatePicker picker='year' placeholder='Chọn Năm' />
-                            <Button className='btn-apply' onClick={() => hanldeApply()}>
+                            <DatePicker
+                                picker='year'
+                                placeholder='Chọn Năm'
+                                style={{ marginRight: 20 }}
+                                onChange={handleDatePickerChange}
+                            />
+                            <Button className='btn-apply' onClick={() => hanldeApplyRevenue()}>
                                 Áp Dụng
                             </Button>
-                            <Echart listRevenueInTwoYear={listRevenueInTwoYear} />
+                            <EChartStatistics listRevenue={listRevenue} />
                         </Card>
                     </Col>
                 </Row>

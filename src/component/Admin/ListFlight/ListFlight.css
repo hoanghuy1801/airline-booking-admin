@@ -38,3 +38,11 @@
         color: #006885 !important;
     }
 }
+.text-cityname {
+    font-size: 15px;
+    font-weight: 500;
+}
+.text-airportcode {
+    font-size: 15px;
+    font-weight: 500;
+}

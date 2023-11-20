@@ -99,6 +99,22 @@ const CancelBooking = (data) => {
 const CreatePassenger = (data) => {
     return axios.post('/api/v1/passenger', data)
 }
+const getBookingById = (id) => {
+    return axios.get(`/api/v1/booking?bookingId=${id}`)
+}
+const updateBooking = (id, data) => {
+    return axios.put(`/api/v1/booking/${id}`, data)
+}
+const statisticalClient = (data) => {
+    return axios.get('/api/v1/admin/statistical-client', {
+        params: data
+    })
+}
+const statisticalRevenue = (data) => {
+    return axios.get('/api/v1/admin/statistical-revenue-by-year', {
+        params: data
+    })
+}
 
 export {
     getAirports,
@@ -129,5 +145,9 @@ export {
     updateCancelBooking,
     getBooking,
     CancelBooking,
-    CreatePassenger
+    CreatePassenger,
+    getBookingById,
+    updateBooking,
+    statisticalClient,
+    statisticalRevenue
 }

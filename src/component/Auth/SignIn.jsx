@@ -87,7 +87,7 @@ const SignIn = () => {
                                         }
                                     ]}
                                 >
-                                    <Input placeholder='Nhập Mật Khẩu' />
+                                    <Input.Password placeholder='Nhập Mật Khẩu' />
                                 </Form.Item>
 
                                 <Form.Item>

@@ -3,35 +3,27 @@ import ReactApexChart from 'react-apexcharts'
 import { Row, Col, Typography } from 'antd'
 import { formatCurrency } from '../../../utils/format'
 
-function EChart(props) {
-    const { listRevenueInTwoYear } = props
+function EChartStatistics(props) {
+    const { listRevenue } = props
     const { Title } = Typography
     const currentYear = new Date().getFullYear()
-    console.log('listRevenueInTwoYear', listRevenueInTwoYear)
+    console.log('listRevenue', listRevenue)
     const items = [
         {
             Title: `${
-                listRevenueInTwoYear?.yearTwo?.maxNumber === undefined
-                    ? formatCurrency(0)
-                    : formatCurrency(listRevenueInTwoYear?.yearTwo?.maxNumber)
+                listRevenue?.maxNumber === undefined ? formatCurrency(0) : formatCurrency(listRevenue?.maxNumber)
             }`,
             user: 'Tháng Cao Nhất'
         },
         {
             Title: `${
-                listRevenueInTwoYear?.yearTwo?.minNumber === undefined
-                    ? formatCurrency(0)
-                    : formatCurrency(listRevenueInTwoYear?.yearTwo?.minNumber)
+                listRevenue?.minNumber === undefined ? formatCurrency(0) : formatCurrency(listRevenue?.minNumber)
             }`,
 
             user: 'Tháng Thấp Nhất'
         },
         {
-            Title: `${
-                listRevenueInTwoYear?.yearTwo?.medium === undefined
-                    ? formatCurrency(0)
-                    : formatCurrency(listRevenueInTwoYear?.yearTwo?.medium)
-            }`,
+            Title: `${listRevenue?.medium === undefined ? formatCurrency(0) : formatCurrency(listRevenue?.medium)}`,
 
             user: 'Trung Bình Các Tháng'
         }
@@ -41,18 +33,18 @@ function EChart(props) {
             {
                 name: `${currentYear}`,
                 data: [
-                    listRevenueInTwoYear?.yearTwo?.January,
-                    listRevenueInTwoYear?.yearTwo?.February,
-                    listRevenueInTwoYear?.yearTwo?.March,
-                    listRevenueInTwoYear?.yearTwo?.April,
-                    listRevenueInTwoYear?.yearTwo?.May,
-                    listRevenueInTwoYear?.yearTwo?.June,
-                    listRevenueInTwoYear?.yearTwo?.July,
-                    listRevenueInTwoYear?.yearTwo?.August,
-                    listRevenueInTwoYear?.yearTwo?.September,
-                    listRevenueInTwoYear?.yearTwo?.October,
-                    listRevenueInTwoYear?.yearTwo?.November,
-                    listRevenueInTwoYear?.yearTwo?.December
+                    listRevenue?.January,
+                    listRevenue?.February,
+                    listRevenue?.March,
+                    listRevenue?.April,
+                    listRevenue?.May,
+                    listRevenue?.June,
+                    listRevenue?.July,
+                    listRevenue?.August,
+                    listRevenue?.September,
+                    listRevenue?.October,
+                    listRevenue?.November,
+                    listRevenue?.December
                 ],
                 color: '#fff'
             }
@@ -182,4 +174,4 @@ function EChart(props) {
     )
 }
 
-export default EChart
+export default EChartStatistics

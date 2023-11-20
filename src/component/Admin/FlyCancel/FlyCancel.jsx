@@ -1,9 +1,10 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react'
-import { Button, Col, Input, Menu, Row, Table, Tag, Typography } from 'antd'
+import { IconFilterFilled } from '@tabler/icons-react'
+import { Button, Col, Input, Menu, Row, Select, Space, Table, Tag, Typography } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import './FlyCancel.css'
-import { getListBooking, updateCancelBooking } from '../../../services/apiAdmin'
+import { getAirports, getListBooking, updateCancelBooking } from '../../../services/apiAdmin'
 import { openNotification } from '../../../utils/Notification'
 import { changeStatusAdmin, changeStatusCancelBooking } from '../../../utils/utils'
 import { formatCurrency, formatDateString } from '../../../utils/format'
@@ -22,6 +23,16 @@ const items = [
 ]
 
 const FlyCancel = () => {
+    const [listAirports, setListAirports] = useState([])
+    useEffect(() => {
+        fechListAirports()
+    }, [])
+    const fechListAirports = async () => {
+        let res = await getAirports()
+        if (res.status == 200) {
+            setListAirports(res.data)
+        }
+    }
     const [current, setCurrent] = useState('pen')
     const [listBooking, setListBooking] = useState([])
     const [checkListBooking, setCheckListBooking] = useState([])
@@ -29,7 +40,10 @@ const FlyCancel = () => {
     const [textSearch, setTextSearch] = useState('')
     const [totalCount, SetTotalCount] = useState(0)
     const [status, setStatus] = useState('pen')
+    const [hidenSearch, setHidenSearch] = useState(false)
     const [disabled, setDisabled] = useState(false)
+    const [sourceAirportId, setSourceAirportId] = useState(0)
+    const [destinationAirportId, setDestinationAirportId] = useState(0)
     useEffect(() => {
         fechListBooking()
     }, [currentPage, status])
@@ -55,7 +69,9 @@ const FlyCancel = () => {
             setCheckListBooking(selectedRows)
         }
     }
-
+    const hanldeApply = () => {
+        fechListBooking()
+    }
     const onClick = (e) => {
         setCurrent(e.key)
         if (e.key === 'pen') {
@@ -73,7 +89,15 @@ const FlyCancel = () => {
         key: index + currentPage * 10 - 9
     }))
     // eslint-disable-next-line no-unused-vars
+    // eslint-disable-next-line no-unused-vars
+    const onChangeSourceAirport = (value, label) => {
+        setSourceAirportId(value)
+    }
 
+    // eslint-disable-next-line no-unused-vars
+    const onDestinationAirport = (value, label) => {
+        setDestinationAirportId(value)
+    }
     const columns = [
         {
             title: 'MÃ ĐẶT VÉ',
@@ -95,6 +119,34 @@ const FlyCancel = () => {
             },
             align: 'end',
             width: 150
+        },
+        {
+            title: 'ĐIỂM ĐI',
+            dataIndex: 'airportName',
+            render: (value, _record) => {
+                return _record?.flightAway?.sourceAirport?.airportName
+            },
+            sorter: (a, b) => {
+                let nameA = a?.flightAway?.sourceAirport?.airportName
+                let nameB = b?.flightAway?.sourceAirport?.airportName
+                return nameA.localeCompare(nameB)
+            },
+
+            width: 200
+        },
+        {
+            title: 'ĐIỂM ĐẾN',
+            dataIndex: 'airportName',
+            render: (value, _record) => {
+                return _record?.flightAway?.destinationAirport?.airportName
+            },
+            sorter: (a, b) => {
+                let nameA = a?.flightAway?.destinationAirport?.airportName
+                let nameB = b?.flightAway?.destinationAirport?.airportName
+                return nameA.localeCompare(nameB)
+            },
+
+            width: 200
         },
         {
             title: 'NGÀY ĐẶT VÉ',
@@ -195,6 +247,11 @@ const FlyCancel = () => {
                     </Button>
                 </Col>
                 <Col span={12} style={{ display: 'flex', justifyContent: 'end' }}>
+                    <div>
+                        <Space>
+                            <IconFilterFilled className='icon-filter' onClick={() => setHidenSearch(!hidenSearch)} />
+                        </Space>
+                    </div>
                     <Input
                         className='input-search'
                         placeholder='Nhập mã đặt vé'
@@ -211,23 +268,77 @@ const FlyCancel = () => {
                         Lưu
                     </Button>
                 </Col>
-
-                <div className='table' style={{ marginTop: 20 }}>
-                    <Table
-                        rowSelection={{
-                            ...rowSelection
-                        }}
-                        columns={columns}
-                        dataSource={dataSource}
-                        pagination={{
-                            current: currentPage,
-                            pageSize: 10,
-                            total: totalCount
-                        }}
-                        onChange={onChange}
-                    />
-                </div>
             </Row>
+            {hidenSearch === true ? (
+                <Row style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
+                    <Col span={4}>
+                        {' '}
+                        <Select
+                            showSearch
+                            placeholder='Chọn điểm đi'
+                            style={{ width: '90%' }}
+                            onChange={onChangeSourceAirport}
+                            filterOption={(input, option) =>
+                                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                            }
+                        >
+                            {listAirports.map((item) => (
+                                // eslint-disable-next-line react/jsx-no-undef
+                                <Option key={item.id} value={item.id} label={item?.city?.cityName}>
+                                    <>
+                                        <Row className='text-cityname'>
+                                            {item.city.cityName} ({item.airportCode})
+                                        </Row>
+                                    </>
+                                </Option>
+                            ))}
+                        </Select>
+                    </Col>
+                    <Col span={4}>
+                        <Select
+                            showSearch
+                            placeholder='Chọn điểm đến'
+                            style={{ width: '90%' }}
+                            onChange={onDestinationAirport}
+                            filterOption={(input, option) =>
+                                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                            }
+                        >
+                            {listAirports.map((item) => (
+                                <Option key={item.id} value={item.id} label={item?.city?.cityName}>
+                                    <>
+                                        <Row className='text-cityname'>
+                                            {item.city.cityName} ({item.airportCode})
+                                        </Row>
+                                    </>
+                                </Option>
+                            ))}
+                        </Select>
+                    </Col>
+                    <Col span={4}>
+                        <Button className='btn-apply' onClick={() => hanldeApply()}>
+                            Áp Dụng
+                        </Button>
+                    </Col>
+                </Row>
+            ) : (
+                ''
+            )}
+            <div className='table' style={{ marginTop: 20 }}>
+                <Table
+                    rowSelection={{
+                        ...rowSelection
+                    }}
+                    columns={columns}
+                    dataSource={dataSource}
+                    pagination={{
+                        current: currentPage,
+                        pageSize: 10,
+                        total: totalCount
+                    }}
+                    onChange={onChange}
+                />
+            </div>
         </div>
     )
 }

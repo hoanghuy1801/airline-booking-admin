@@ -304,6 +304,7 @@ const ListFlight = () => {
     const handleSearch = () => {
         fechListFight()
     }
+
     return (
         <div
             className='ant-card criclebox tablespace mb-24'
@@ -366,18 +367,12 @@ const ListFlight = () => {
                                         <Row className='text-cityname'>
                                             {item.city.cityName} ({item.airportCode})
                                         </Row>
-                                        <Row>
-                                            <Col span={18} className='text-airportname'>
-                                                {item.airportName}
-                                            </Col>
-                                        </Row>
                                     </>
                                 </Option>
                             ))}
                         </Select>
                     </Col>
                     <Col span={4}>
-                        {' '}
                         <Select
                             showSearch
                             placeholder='Chọn điểm đến'
@@ -388,16 +383,10 @@ const ListFlight = () => {
                             }
                         >
                             {listAirports.map((item) => (
-                                // eslint-disable-next-line react/jsx-no-undef
                                 <Option key={item.id} value={item.id} label={item?.city?.cityName}>
                                     <>
                                         <Row className='text-cityname'>
                                             {item.city.cityName} ({item.airportCode})
-                                        </Row>
-                                        <Row>
-                                            <Col span={18} className='text-airportname'>
-                                                {item.airportName}
-                                            </Col>
                                         </Row>
                                     </>
                                 </Option>
