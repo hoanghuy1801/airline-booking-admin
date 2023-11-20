@@ -23,7 +23,7 @@ import Statistics from './component/Admin/Statistics/Statistics.jsx'
 import TicketSales from './component/Admin/Statistics/TicketSales.jsx'
 import PopularFlight from './component/Admin/Statistics/PopularFlight.jsx'
 import TicketClassRevenue from './component/Admin/Statistics/TicketClassRevenue.jsx'
-import Test from './component/Admin/test.jsx'
+import Test from './component/Admin/Test.jsx'
 import BookingCode from './component/Admin/BookingCode/BookingCode.jsx'
 import EditBooking from './component/Admin/BookingCode/EditBooking.jsx'
 
