@@ -7,7 +7,6 @@ function EChart(props) {
     const { listRevenueInTwoYear } = props
     const { Title } = Typography
     const currentYear = new Date().getFullYear()
-    console.log('listRevenueInTwoYear', listRevenueInTwoYear)
     const items = [
         {
             Title: `${

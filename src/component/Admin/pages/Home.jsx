@@ -9,7 +9,6 @@ import LineChart from '../chart/LineChart'
 import { get10BookingNew, getListBooking, getRevenueInTwoYear, reportClient } from '../../../services/apiAdmin'
 import { openNotification } from '../../../utils/Notification'
 import { formatCurrency, formatTimeHHMM } from '../../../utils/format'
-import { changeStatusAdmin, changeStatusCancelBooking } from '../../../utils/utils'
 
 const Home = () => {
     const { Title, Text } = Typography
@@ -157,10 +156,9 @@ const Home = () => {
         reason: `${listBooking?.note}`,
         status: `${listBooking?.status}`
     }))
-
     const timelineList = listBookingNew.map((listBooking, index) => ({
         title: `${formatCurrency(listBooking?.amountTotal)} - ${listBooking?.bookingCode}`,
-        time: `${formatTimeHHMM(listBooking?.createdAt)} `,
+        time: `${formatTimeHHMM(listBooking?.bookingDate)} `,
         color: index < 2 ? 'green' : undefined
     }))
     return (

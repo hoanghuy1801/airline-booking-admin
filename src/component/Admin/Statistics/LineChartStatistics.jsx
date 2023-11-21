@@ -6,26 +6,25 @@ import { formatCurrency } from '../../../utils/format'
 
 function LineChartStatistics(props) {
     // eslint-disable-next-line react/prop-types
-    const { listRevenueInTwoYear } = props
+    const { listStatisticalTotalBooking, year } = props
     const { Title } = Typography
-    const currentYear = new Date().getFullYear()
     const lineChart = {
         series: [
             {
-                name: `${currentYear}`,
+                name: `${year}`,
                 data: [
-                    listRevenueInTwoYear?.yearTwo?.January,
-                    listRevenueInTwoYear?.yearTwo?.February,
-                    listRevenueInTwoYear?.yearTwo?.March,
-                    listRevenueInTwoYear?.yearTwo?.April,
-                    listRevenueInTwoYear?.yearTwo?.May,
-                    listRevenueInTwoYear?.yearTwo?.June,
-                    listRevenueInTwoYear?.yearTwo?.July,
-                    listRevenueInTwoYear?.yearTwo?.August,
-                    listRevenueInTwoYear?.yearTwo?.September,
-                    listRevenueInTwoYear?.yearTwo?.October,
-                    listRevenueInTwoYear?.yearTwo?.November,
-                    listRevenueInTwoYear?.yearTwo?.December
+                    listStatisticalTotalBooking?.January,
+                    listStatisticalTotalBooking?.February,
+                    listStatisticalTotalBooking?.March,
+                    listStatisticalTotalBooking?.April,
+                    listStatisticalTotalBooking?.May,
+                    listStatisticalTotalBooking?.June,
+                    listStatisticalTotalBooking?.July,
+                    listStatisticalTotalBooking?.August,
+                    listStatisticalTotalBooking?.September,
+                    listStatisticalTotalBooking?.October,
+                    listStatisticalTotalBooking?.November,
+                    listStatisticalTotalBooking?.December
                 ],
                 offsetY: 0
             }
@@ -58,9 +57,6 @@ function LineChartStatistics(props) {
                         fontSize: '14px',
                         fontWeight: 600,
                         colors: ['#8c8c8c']
-                    },
-                    formatter: function (val) {
-                        return formatCurrency(val)
                     }
                 }
             },
@@ -113,29 +109,15 @@ function LineChartStatistics(props) {
     }
     const items = [
         {
-            Title: `${
-                listRevenueInTwoYear?.yearTwo?.maxNumber === undefined
-                    ? formatCurrency(0)
-                    : formatCurrency(listRevenueInTwoYear?.yearTwo?.maxNumber)
-            }`,
+            Title: `${listStatisticalTotalBooking?.maxNumber} Mã Đặt Vé`,
             user: 'Tháng Cao Nhất'
         },
         {
-            Title: `${
-                listRevenueInTwoYear?.yearTwo?.minNumber === undefined
-                    ? formatCurrency(0)
-                    : formatCurrency(listRevenueInTwoYear?.yearTwo?.minNumber)
-            }`,
-
+            Title: `${listStatisticalTotalBooking?.minNumber} Mã Đặt Vé`,
             user: 'Tháng Thấp Nhất'
         },
         {
-            Title: `${
-                listRevenueInTwoYear?.yearTwo?.medium === undefined
-                    ? formatCurrency(0)
-                    : formatCurrency(listRevenueInTwoYear?.yearTwo?.medium)
-            }`,
-
+            Title: `${listStatisticalTotalBooking?.medium} Mã Đặt Vé`,
             user: 'Trung Bình Các Tháng'
         }
     ]
@@ -148,10 +130,7 @@ function LineChartStatistics(props) {
                 <div className='sales'>
                     <ul>
                         <li>
-                            {<MinusOutlined />} {currentYear - 1}
-                        </li>
-                        <li>
-                            {<MinusOutlined />} {currentYear}
+                            {<MinusOutlined />} {year}
                         </li>
                     </ul>
                 </div>

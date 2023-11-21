@@ -348,8 +348,8 @@ const ListFlight = () => {
                 </Col>
             </Row>
             {hidenSearch === true ? (
-                <Row style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
-                    <Col span={4}>
+                <Row style={{ display: 'flex', justifyContent: 'center', marginBottom: 20, marginLeft: 30 }}>
+                    <Col span={6}>
                         {' '}
                         <Select
                             showSearch
@@ -365,14 +365,14 @@ const ListFlight = () => {
                                 <Option key={item.id} value={item.id} label={item?.city?.cityName}>
                                     <>
                                         <Row className='text-cityname'>
-                                            {item.city.cityName} ({item.airportCode})
+                                            {item.city.cityName} ({item.airportCode})- {item.airportName}
                                         </Row>
                                     </>
                                 </Option>
                             ))}
                         </Select>
                     </Col>
-                    <Col span={4}>
+                    <Col span={6}>
                         <Select
                             showSearch
                             placeholder='Chọn điểm đến'
@@ -386,7 +386,7 @@ const ListFlight = () => {
                                 <Option key={item.id} value={item.id} label={item?.city?.cityName}>
                                     <>
                                         <Row className='text-cityname'>
-                                            {item.city.cityName} ({item.airportCode})
+                                            {item.city.cityName} ({item.airportCode})- {item.airportName}
                                         </Row>
                                     </>
                                 </Option>

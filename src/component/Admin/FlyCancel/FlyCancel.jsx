@@ -44,6 +44,7 @@ const FlyCancel = () => {
     const [disabled, setDisabled] = useState(false)
     const [sourceAirportId, setSourceAirportId] = useState(0)
     const [destinationAirportId, setDestinationAirportId] = useState(0)
+    console.log('huy', listBooking)
     useEffect(() => {
         fechListBooking()
     }, [currentPage, status])
@@ -51,7 +52,9 @@ const FlyCancel = () => {
         const data = {
             bookingCode: textSearch,
             page: currentPage,
-            size: 10
+            size: 10,
+            sourceAirportId: sourceAirportId === 0 ? '' : sourceAirportId,
+            destinationAirportId: destinationAirportId === 0 ? '' : destinationAirportId
         }
         try {
             let res = await getListBooking(status, data)
@@ -122,13 +125,13 @@ const FlyCancel = () => {
         },
         {
             title: 'ĐIỂM ĐI',
-            dataIndex: 'airportName',
+            dataIndex: 'sourceAirport',
             render: (value, _record) => {
-                return _record?.flightAway?.sourceAirport?.airportName
+                return _record?.flightAway?.sourceAirport?.city?.cityName
             },
             sorter: (a, b) => {
-                let nameA = a?.flightAway?.sourceAirport?.airportName
-                let nameB = b?.flightAway?.sourceAirport?.airportName
+                let nameA = a?.flightAway?.sourceAirport?.city?.cityName
+                let nameB = b?.flightAway?.sourceAirport?.city?.cityName
                 return nameA.localeCompare(nameB)
             },
 
@@ -136,13 +139,13 @@ const FlyCancel = () => {
         },
         {
             title: 'ĐIỂM ĐẾN',
-            dataIndex: 'airportName',
+            dataIndex: 'destinationAirport',
             render: (value, _record) => {
-                return _record?.flightAway?.destinationAirport?.airportName
+                return _record?.flightAway?.destinationAirport?.city?.cityName
             },
             sorter: (a, b) => {
-                let nameA = a?.flightAway?.destinationAirport?.airportName
-                let nameB = b?.flightAway?.destinationAirport?.airportName
+                let nameA = a?.flightAway?.destinationAirport?.city?.cityName
+                let nameB = b?.flightAway?.destinationAirport?.city?.cityName
                 return nameA.localeCompare(nameB)
             },
 
@@ -271,7 +274,7 @@ const FlyCancel = () => {
             </Row>
             {hidenSearch === true ? (
                 <Row style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
-                    <Col span={4}>
+                    <Col span={6}>
                         {' '}
                         <Select
                             showSearch
@@ -287,14 +290,14 @@ const FlyCancel = () => {
                                 <Option key={item.id} value={item.id} label={item?.city?.cityName}>
                                     <>
                                         <Row className='text-cityname'>
-                                            {item.city.cityName} ({item.airportCode})
+                                            {item.city.cityName} ({item.airportCode})- {item.airportName}
                                         </Row>
                                     </>
                                 </Option>
                             ))}
                         </Select>
                     </Col>
-                    <Col span={4}>
+                    <Col span={6}>
                         <Select
                             showSearch
                             placeholder='Chọn điểm đến'
@@ -308,7 +311,7 @@ const FlyCancel = () => {
                                 <Option key={item.id} value={item.id} label={item?.city?.cityName}>
                                     <>
                                         <Row className='text-cityname'>
-                                            {item.city.cityName} ({item.airportCode})
+                                            {item.city.cityName} ({item.airportCode})- {item.airportName}
                                         </Row>
                                     </>
                                 </Option>

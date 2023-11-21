@@ -150,12 +150,7 @@ const CreateFlight = () => {
                                     <Option key={item.id} value={item.id} label={item?.city?.cityName}>
                                         <>
                                             <Row className='text-cityname'>
-                                                {item.city.cityName} ({item.airportCode})
-                                            </Row>
-                                            <Row>
-                                                <Col span={18} className='text-airportname'>
-                                                    {item.airportName}
-                                                </Col>
+                                                {item.city.cityName} ({item.airportCode})- {item.airportName}
                                             </Row>
                                         </>
                                     </Option>
@@ -176,12 +171,7 @@ const CreateFlight = () => {
                                     <Option key={item.id} value={item.id} label={item.city.cityName}>
                                         <>
                                             <Row className='text-cityname'>
-                                                {item.city.cityName} ({item.airportCode})
-                                            </Row>
-                                            <Row>
-                                                <Col span={18} className='text-airportname'>
-                                                    {item.airportName}
-                                                </Col>
+                                                {item.city.cityName} ({item.airportCode})- {item.airportName}
                                             </Row>
                                         </>
                                     </Option>
@@ -212,7 +202,7 @@ const CreateFlight = () => {
                                 format='HH:mm DD/MM/YYYY '
                             />
                         </Form.Item>
-                        <Form.Item name='status' label='Máy bay chở khách'>
+                        <Form.Item name='status' label='Máy bay chở khách:'>
                             <Select
                                 style={{
                                     width: '90%'
@@ -263,7 +253,7 @@ const CreateFlight = () => {
                         </Form.Item>
 
                         <Form.Item
-                            label='Giá vé phổ thông'
+                            label='Giá Vé Phổ Thông:'
                             onChange={(event) => setSeatPriceCONOMY(event.target.value)}
                         >
                             <Input

@@ -133,7 +133,7 @@ function LineChart(props) {
         <>
             <div className='linechart'>
                 <div>
-                    <Title level={5}>API Hiện Thị Doanh Thu Từng Tháng Trả Dữ Liệu Hai Năm Ngần Nhất </Title>
+                    <Title level={5}>Doanh Thu Từng Tháng Trả Dữ Liệu Hai Năm Ngần Nhất </Title>
                 </div>
                 <div className='sales'>
                     <ul>

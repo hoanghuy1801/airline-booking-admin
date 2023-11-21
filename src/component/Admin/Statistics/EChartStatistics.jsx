@@ -7,7 +7,6 @@ function EChartStatistics(props) {
     const { listRevenue } = props
     const { Title } = Typography
     const currentYear = new Date().getFullYear()
-    console.log('listRevenue', listRevenue)
     const items = [
         {
             Title: `${

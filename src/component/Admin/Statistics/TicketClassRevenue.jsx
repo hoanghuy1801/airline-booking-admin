@@ -4,45 +4,56 @@ import { Button, Card, Col, DatePicker, Progress, Row, Typography } from 'antd'
 import LocaleProvider from 'antd/es/locale'
 import locale from 'antd/locale/vi_VN'
 import 'dayjs/locale/vi'
-import { getRevenueInTwoYear } from '../../../services/apiAdmin'
+import { getRevenueInTwoYear, statisticalRevenueSeat } from '../../../services/apiAdmin'
 import { openNotification } from '../../../utils/Notification'
+import { formatCurrency } from '../../../utils/format'
 
 const { RangePicker } = DatePicker
 const TicketClassRevenue = () => {
     const { Title } = Typography
-    const [listRevenueInTwoYear, setListRevenueInTwoYear] = useState([])
+    const currentYear = new Date().getFullYear()
+    const firstDayOfYear = new Date(currentYear, 0, 1)
+    const lastDayOfYear = new Date(currentYear, 11, 31)
+    const formattedFirstDay = firstDayOfYear.toLocaleDateString('en-CA')
+    const formattedLastDay = lastDayOfYear.toLocaleDateString('en-CA')
+    const [listRevenueSeat, setListRevenueSeat] = useState([])
+    const [fromDate, setFromDate] = useState(formattedFirstDay)
+    const [toDate, setToDate] = useState(formattedLastDay)
     useEffect(() => {
         fechHome()
     }, [])
     const fechHome = async () => {
+        let data = {
+            fromDate: fromDate,
+            toDate: toDate
+        }
         try {
-            let r = await getRevenueInTwoYear()
-            setListRevenueInTwoYear(r.data)
+            let r = await statisticalRevenueSeat(data)
+            setListRevenueSeat(r.data)
         } catch (e) {
             openNotification('error', 'Thông báo', e.response.data.error.message)
         }
     }
-
-    const hanldeApply = () => {
-        // fechListFight()
+    const handleDateRangeChange = (dates, dateStrings) => {
+        setFromDate(dateStrings[0])
+        setToDate(dateStrings[1])
     }
-    const list = [
-        {
-            Title: 'Soft UI Shopify Version',
-            bud: '$14,000',
-            progress: <Progress percent={60} size='small' />
-        },
-        {
-            Title: 'Progress Track',
-            bud: '$3,000',
-            progress: <Progress percent={10} size='small' />
-        },
-        {
-            Title: 'Fix Platform Errors',
-            bud: 'Not Set',
-            progress: <Progress percent={100} size='small' status='active' />
-        }
-    ]
+    const hanldeApply = () => {
+        fechHome()
+    }
+    console.log('listRevenueSeat', listRevenueSeat)
+    const totalBooking = listRevenueSeat.reduce((acc, item) => acc + +item.totalBooking, 0)
+    const totalAmount = listRevenueSeat.reduce((acc, item) => acc + item.amountTotal, 0)
+    console.log('totalBooking', (Number(listRevenueSeat[0]?.totalBooking) / totalBooking) * 100)
+    console.log('totalAmount', totalAmount)
+    const list = listRevenueSeat.map((listRevenueSeat, index) => ({
+        Title: `${listRevenueSeat?.seatName} - ${listRevenueSeat?.seatClass}`,
+        total: `${formatCurrency(listRevenueSeat?.amountTotal)}`,
+        ratioAmount: <Progress percent={Math.round((listRevenueSeat?.amountTotal / totalAmount) * 100)} size='small' />,
+        totalQuantity: `${listRevenueSeat?.totalBooking}`,
+        ratioQuantity: <Progress percent={(Number(listRevenueSeat?.totalBooking) / totalBooking) * 100} size='small' />
+    }))
+
     return (
         <>
             <div className='layout-content'>
@@ -54,7 +65,7 @@ const TicketClassRevenue = () => {
                     {' '}
                     <Col span={6}>
                         <LocaleProvider locale={locale}>
-                            <RangePicker size='large' />
+                            <RangePicker size='large' onChange={handleDateRangeChange} />
                         </LocaleProvider>
                     </Col>
                     <Col span={4}>
@@ -76,29 +87,30 @@ const TicketClassRevenue = () => {
                                 <table className='width-100'>
                                     <thead>
                                         <tr>
-                                            <th>HẠNG VÉ</th>
-                                            <th>DOANH THU</th>
-                                            <th>TỈ LỆ DOANH THU</th>
-                                            <th>SỐ LƯỢNG VÉ</th>
-                                            <th>TỈ LỆ VÉ</th>
-                                            <th>TỪ NGÀY</th>
-                                            <th>ĐẾN NGÀY</th>
+                                            <th style={{ width: '500px' }}>HẠNG VÉ</th>
+                                            <th style={{ width: '300px' }}>DOANH THU</th>
+                                            <th style={{ width: '250px' }}>TỈ LỆ DOANH THU</th>
+                                            <th style={{ display: 'flex', justifyContent: 'center' }}>SỐ LƯỢNG VÉ</th>
+                                            <th style={{ width: '250px' }}>TỈ LỆ VÉ</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {list.map((d, index) => (
                                             <tr key={index}>
                                                 <td>
-                                                    <h6>
-                                                        <img src={d.img} alt='' className='avatar-sm mr-10' /> {d.Title}
-                                                    </h6>
-                                                </td>
-                                                <td>{d.member}</td>
-                                                <td>
-                                                    <span className='text-xs font-weight-bold'>{d.bud} </span>
+                                                    <h6>{d.Title}</h6>
                                                 </td>
                                                 <td>
-                                                    <div className='percent-progress'>{d.progress}</div>
+                                                    <h6>{d.total}</h6>
+                                                </td>
+                                                <td>
+                                                    <span className='text-xs font-weight-bold'>{d.ratioAmount} </span>
+                                                </td>
+                                                <td style={{ display: 'flex', justifyContent: 'center' }}>
+                                                    <h6>{d.totalQuantity}</h6>
+                                                </td>
+                                                <td>
+                                                    <span className='text-xs font-weight-bold'>{d.ratioQuantity} </span>
                                                 </td>
                                             </tr>
                                         ))}

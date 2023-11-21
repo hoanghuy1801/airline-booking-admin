@@ -116,6 +116,7 @@ const EditFlight = () => {
                             <Select
                                 showSearch
                                 disabled
+                                size='large'
                                 defaultValue={flightById?.sourceAirport?.id}
                                 style={{ width: '90%' }}
                                 filterOption={(input, option) =>
@@ -126,12 +127,7 @@ const EditFlight = () => {
                                     <Option key={item.id} value={item.id} label={item?.city?.cityName}>
                                         <>
                                             <Row className='text-cityname'>
-                                                {item.city.cityName} ({item.airportCode})
-                                            </Row>
-                                            <Row>
-                                                <Col span={18} className='text-airportname'>
-                                                    {item.airportName}
-                                                </Col>
+                                                {item.city.cityName} ({item.airportCode})- {item.airportName}
                                             </Row>
                                         </>
                                     </Option>
@@ -142,6 +138,7 @@ const EditFlight = () => {
                             <Select
                                 showSearch
                                 disabled
+                                size='large'
                                 defaultValue={flightById?.destinationAirport?.id}
                                 style={{ width: '90%' }}
                                 filterOption={(input, option) =>
@@ -152,12 +149,7 @@ const EditFlight = () => {
                                     <Option key={item.id} value={item.id} label={item.city.cityName}>
                                         <>
                                             <Row className='text-cityname'>
-                                                {item.city.cityName} ({item.airportCode})
-                                            </Row>
-                                            <Row>
-                                                <Col span={18} className='text-airportname'>
-                                                    {item.airportName}
-                                                </Col>
+                                                {item.city.cityName} ({item.airportCode})- {item.airportName}
                                             </Row>
                                         </>
                                     </Option>
@@ -170,6 +162,7 @@ const EditFlight = () => {
                                 style={{
                                     width: '90%'
                                 }}
+                                size='large'
                                 showTime
                                 onOk={onOk}
                                 format='HH:mm DD/MM/YYYY '
@@ -181,6 +174,7 @@ const EditFlight = () => {
                                 style={{
                                     width: '90%'
                                 }}
+                                size='large'
                                 showTime
                                 onOk={onOksetArrivalDate}
                                 format='HH:mm DD/MM/YYYY '
@@ -191,6 +185,7 @@ const EditFlight = () => {
                                 style={{
                                     width: '90%'
                                 }}
+                                size='large'
                                 defaultValue={aircraftId}
                                 onChange={onAircraft}
                                 filterOption={(input, option) =>
@@ -221,6 +216,7 @@ const EditFlight = () => {
                                 style={{
                                     width: '90%'
                                 }}
+                                size='large'
                                 disabled
                                 options={[
                                     {
@@ -244,6 +240,7 @@ const EditFlight = () => {
                                 style={{
                                     width: '90%'
                                 }}
+                                size='small'
                                 suffix='VND'
                             />
                         </Form.Item>
@@ -256,6 +253,7 @@ const EditFlight = () => {
                                 style={{
                                     width: '90%'
                                 }}
+                                size='small'
                                 suffix='VND'
                             />
                         </Form.Item>
@@ -268,6 +266,7 @@ const EditFlight = () => {
                                 style={{
                                     width: '90%'
                                 }}
+                                size='small'
                                 suffix='VND'
                             />
                         </Form.Item>

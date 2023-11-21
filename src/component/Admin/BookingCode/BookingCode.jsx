@@ -1,16 +1,14 @@
 import { useEffect, useState } from 'react'
-import { Table, Space, Input, Row, Col, Button, DatePicker, Menu, Tag, Select, Dropdown, Typography } from 'antd'
+import { Table, Space, Input, Row, Col, Button, Menu, Tag, Select, Dropdown, Typography } from 'antd'
 import { IconFilterFilled } from '@tabler/icons-react'
 
 import { useNavigate } from 'react-router-dom'
 import { openNotification } from '../../../utils/Notification'
 import { CancelBooking, getBooking, getBookingById } from '../../../services/apiAdmin'
 import { changeStatusAdmin, changeStatusBookingPayment } from '../../../utils/utils'
-import { formatCurrency, formatDateString, formatTimeHHMM } from '../../../utils/format'
+import { formatCurrency, formatDateString } from '../../../utils/format'
 import { getAirports } from '../../../services/apiAdmin'
-import locale from 'antd/locale/vi_VN'
 import 'dayjs/locale/vi'
-import LocaleProvider from 'antd/es/locale'
 import { IconDotsVertical } from '@tabler/icons-react'
 import { useDispatch } from 'react-redux'
 import { setBookingById } from '../../../redux/reducers/Admin'
@@ -39,8 +37,6 @@ const BookingCode = () => {
     const [sourceAirportId, setSourceAirportId] = useState(0)
     const [destinationAirportId, setDestinationAirportId] = useState(0)
     const [hidenSearch, setHidenSearch] = useState(false)
-    const [departureDate, setDepartureDate] = useState('')
-    const [arrivalDate, setArrivalDate] = useState('')
     const dispastch = useDispatch()
     // eslint-disable-next-line no-unused-vars
     const onChange = (pagination, filters, sorter, extra) => {
@@ -74,11 +70,9 @@ const BookingCode = () => {
         const data = {
             page: currentPage,
             size: 10,
-            bookingCode: textSearch
-            // sourceAirportId: sourceAirportId === 0 ? '' : sourceAirportId,
-            // destinationAirportId: destinationAirportId === 0 ? '' : destinationAirportId,
-            // departureDate: formatDate(departureDate) === 'Invalid date' ? '' : formatDate(departureDate),
-            // arrivalDate: formatDate(arrivalDate) === 'Invalid date' ? '' : formatDate(arrivalDate)
+            bookingCode: textSearch,
+            sourceAirportId: sourceAirportId === 0 ? '' : sourceAirportId,
+            destinationAirportId: destinationAirportId === 0 ? '' : destinationAirportId
         }
         try {
             let res = await getBooking(status, data)
@@ -117,6 +111,34 @@ const BookingCode = () => {
                 return formatCurrency(value)
             },
             align: 'end'
+        },
+        {
+            title: 'ĐIỂM ĐI',
+            dataIndex: 'sourceAirport',
+            render: (value, _record) => {
+                return _record?.flightAway?.sourceAirport?.city?.cityName
+            },
+            sorter: (a, b) => {
+                let nameA = a?.flightAway?.sourceAirport?.city?.cityName
+                let nameB = b?.flightAway?.sourceAirport?.city?.cityName
+                return nameA.localeCompare(nameB)
+            },
+
+            width: 200
+        },
+        {
+            title: 'ĐIỂM ĐẾN',
+            dataIndex: 'destinationAirport',
+            render: (value, _record) => {
+                return _record?.flightAway?.destinationAirport?.city?.cityName
+            },
+            sorter: (a, b) => {
+                let nameA = a?.flightAway?.destinationAirport?.city?.cityName
+                let nameB = b?.flightAway?.destinationAirport?.city?.cityName
+                return nameA.localeCompare(nameB)
+            },
+
+            width: 200
         },
 
         {
@@ -218,14 +240,8 @@ const BookingCode = () => {
         }
     }
 
-    const onChangeDepartureDate = (dates, dateStrings) => {
-        setDepartureDate(dateStrings)
-    }
-    const onChangeArrivalDate = (dates, dateStrings) => {
-        setArrivalDate(dateStrings)
-    }
     const hanldeApply = () => {
-        //fechListFight()
+        fechListBooking()
     }
     const idList = checkListBooking.map((booking) => booking.id)
     const bookingCodeList = checkListBooking.map((booking) => booking.bookingCode)
@@ -270,7 +286,7 @@ const BookingCode = () => {
             />
             <Row>
                 <Col span={12}>
-                    <Button className='btn-create' onClick={() => navigate('/admins/flight/create')}>
+                    <Button className='btn-create' onClick={() => navigate('/admins/booking/create')}>
                         Đặt Vé
                     </Button>
                     <Button className='btn-create' onClick={() => handleCancel()}>
@@ -300,8 +316,8 @@ const BookingCode = () => {
                 </Col>
             </Row>
             {hidenSearch === true ? (
-                <Row style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
-                    <Col span={4}>
+                <Row style={{ display: 'flex', justifyContent: 'center', marginBottom: 20, marginLeft: 30 }}>
+                    <Col span={6}>
                         {' '}
                         <Select
                             showSearch
@@ -317,14 +333,14 @@ const BookingCode = () => {
                                 <Option key={item.id} value={item.id} label={item?.city?.cityName}>
                                     <>
                                         <Row className='text-cityname'>
-                                            {item.city.cityName} ({item.airportCode})
+                                            {item.city.cityName} ({item.airportCode})- {item.airportName}
                                         </Row>
                                     </>
                                 </Option>
                             ))}
                         </Select>
                     </Col>
-                    <Col span={4}>
+                    <Col span={6}>
                         {' '}
                         <Select
                             showSearch
@@ -340,32 +356,12 @@ const BookingCode = () => {
                                 <Option key={item.id} value={item.id} label={item?.city?.cityName}>
                                     <>
                                         <Row className='text-cityname'>
-                                            {item.city.cityName} ({item.airportCode})
+                                            {item.city.cityName} ({item.airportCode})- {item.airportName}
                                         </Row>
                                     </>
                                 </Option>
                             ))}
                         </Select>
-                    </Col>
-                    <Col span={4}>
-                        <LocaleProvider locale={locale}>
-                            <DatePicker
-                                style={{ width: '90%' }}
-                                placeholder={'Ngày cất cách'}
-                                onChange={onChangeDepartureDate}
-                                format='DD/MM/YYYY'
-                            />
-                        </LocaleProvider>
-                    </Col>
-                    <Col span={4}>
-                        <LocaleProvider locale={locale}>
-                            <DatePicker
-                                style={{ width: '90%' }}
-                                placeholder={'Ngày hạ cánh'}
-                                format='DD/MM/YYYY'
-                                onChange={onChangeArrivalDate}
-                            />
-                        </LocaleProvider>
                     </Col>
                     <Col span={4}>
                         <Button className='btn-apply' onClick={() => hanldeApply()}>

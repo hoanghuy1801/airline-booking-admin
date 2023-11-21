@@ -115,7 +115,24 @@ const statisticalRevenue = (data) => {
         params: data
     })
 }
-
+const statisticalTotalBooking = (data) => {
+    return axios.get('/api/v1/admin/statistical-total-booking-by-year', {
+        params: data
+    })
+}
+const statisticalRevenueSeat = (data) => {
+    return axios.get('/api/v1/admin/statistical-revenue-seat', {
+        params: data
+    })
+}
+const getTickets = () => {
+    return axios.get('api/v1/seat/all')
+}
+const getListFlightBooking = (data) => {
+    return axios.get('api/v1/flight/search', {
+        params: data
+    })
+}
 export {
     getAirports,
     getCountries,
@@ -149,5 +166,9 @@ export {
     getBookingById,
     updateBooking,
     statisticalClient,
-    statisticalRevenue
+    statisticalRevenue,
+    statisticalTotalBooking,
+    statisticalRevenueSeat,
+    getTickets,
+    getListFlightBooking
 }

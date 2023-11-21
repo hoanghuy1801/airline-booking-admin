@@ -122,7 +122,7 @@ function Sidenav({ color }) {
                             }}
                         />
 
-                        <span className='label'>Đặt Vé</span>
+                        <span className='label'> Quản Lý Đặt Vé</span>
                     </NavLink>
                 </Menu.Item>
                 <Menu.Item key='6'>
