@@ -96,7 +96,7 @@ const EditFlight = () => {
         >
             <Text className='title-admin'>Thông Tin Chuyến bay</Text>
             <Row className='form-btn'>
-                <Button className='btn-cancel' onClick={() => navigate('/admins/flight/listflight')}>
+                <Button className='btn-cancel' onClick={() => navigate('/admins/flight')}>
                     Hủy
                 </Button>
                 <Button className='btn-save' onClick={() => handleContinue()}>

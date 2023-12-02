@@ -5,6 +5,8 @@ import { getCountries } from '../../../services/apiAdmin'
 import { useNavigate } from 'react-router-dom'
 import { createEmpolyee } from '../../../services/apiAdmin'
 import { openNotification } from '../../../utils/Notification'
+import jwt from '../../../utils/jwt'
+import { formatDate } from '../../../utils/format'
 
 const { Text } = Typography
 
@@ -47,7 +49,7 @@ const CreateAdmin = () => {
     const handleContinue = async () => {
         const data = {
             name: name,
-            dateOfBirth: dateOfBirth,
+            dateOfBirth: formatDate(dateOfBirth),
             gender: gender,
             idCard: idCard,
             phoneNumber: phoneNumber,
@@ -229,9 +231,13 @@ const CreateAdmin = () => {
                 <Col span={8}>
                     {' '}
                     <Radio.Group onChange={onChange} value={userType}>
-                        <Radio value='MANAGER' style={{ fontSize: 18 }}>
-                            Quản trị viên
-                        </Radio>
+                        {jwt.getUserRole() === 'ADMIN' ? (
+                            <Radio value='MANAGER' style={{ fontSize: 18 }}>
+                                Quản trị viên
+                            </Radio>
+                        ) : (
+                            ''
+                        )}
                         <Radio value='EMPLOYEE' style={{ fontSize: 18 }}>
                             Nhân viên
                         </Radio>

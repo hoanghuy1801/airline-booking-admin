@@ -133,6 +133,12 @@ const getListFlightBooking = (data) => {
         params: data
     })
 }
+const statisticalPopularFlight = (data) => {
+    return axios.get('api/v1/admin/statistical-popular-flight', {
+        params: data
+    })
+}
+
 export {
     getAirports,
     getCountries,
@@ -170,5 +176,6 @@ export {
     statisticalTotalBooking,
     statisticalRevenueSeat,
     getTickets,
-    getListFlightBooking
+    getListFlightBooking,
+    statisticalPopularFlight
 }

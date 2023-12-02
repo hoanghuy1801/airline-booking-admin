@@ -200,6 +200,10 @@ const FlyCancel = () => {
     }
     const idList = checkListBooking.map((booking) => booking.id)
     const handleConfirm = async () => {
+        if (idList.length === 0) {
+            openNotification('error', 'Thông báo', `Bạn chưa chọn mã đặt vé để xác nhận `)
+            return
+        }
         let data = {
             ids: idList,
             status: 'DEL'

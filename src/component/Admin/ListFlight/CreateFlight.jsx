@@ -107,7 +107,7 @@ const CreateFlight = () => {
             }
             await createFlight(data)
             openNotification('success', 'Thông báo', 'Thêm chuyến bay thành công')
-            navigate('/admins/flight/listflight')
+            navigate('/admins/flight')
         } catch (e) {
             openNotification('error', 'Thông báo', e.response.data.error.message)
         }

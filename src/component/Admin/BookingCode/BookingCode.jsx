@@ -46,7 +46,7 @@ const BookingCode = () => {
     const navigate = useNavigate()
     useEffect(() => {
         fechListBooking()
-    }, [currentPage, textSearch])
+    }, [currentPage])
     useEffect(() => {
         fechListAirports()
     }, [])
@@ -257,7 +257,7 @@ const BookingCode = () => {
         }
     }
     const handleSearch = () => {
-        // fechListFight()
+        fechListBooking()
     }
     const handleCancel = async () => {
         let data = {
@@ -286,9 +286,6 @@ const BookingCode = () => {
             />
             <Row>
                 <Col span={12}>
-                    <Button className='btn-create' onClick={() => navigate('/admins/booking/create')}>
-                        Đặt Vé
-                    </Button>
                     <Button className='btn-create' onClick={() => handleCancel()}>
                         Hủy
                     </Button>

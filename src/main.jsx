@@ -26,7 +26,6 @@ import TicketClassRevenue from './component/Admin/Statistics/TicketClassRevenue.
 import Test from './component/Admin/Test.jsx'
 import BookingCode from './component/Admin/BookingCode/BookingCode.jsx'
 import EditBooking from './component/Admin/BookingCode/EditBooking.jsx'
-import CreateBooking from './component/Admin/BookingCode/CreateBooking.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <Provider store={store}>
@@ -53,7 +52,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                         <Route path='/admins/passenger/edit' element={<EditPassenger />} />
                         <Route path='/admins/booking' element={<BookingCode />} />
                         <Route path='/admins/booking/edit' element={<EditBooking />} />
-                        <Route path='/admins/booking/create' element={<CreateBooking />} />
                         <Route path='/admins/statistics' element={<MainStatistics />}>
                             <Route path='/admins/statistics/overview' element={<Statistics />} />
                             <Route path='/admins/statistics/ticket-sales' element={<TicketSales />} />

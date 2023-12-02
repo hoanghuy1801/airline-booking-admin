@@ -164,6 +164,10 @@ const EditAdmin = () => {
                                     {
                                         value: 'PEN',
                                         label: 'Tạm dừng'
+                                    },
+                                    {
+                                        value: 'DEL',
+                                        label: 'Xóa'
                                     }
                                 ]}
                             />

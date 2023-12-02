@@ -8,7 +8,6 @@ import { openNotification } from '../../utils/Notification'
 import jwt from '../../utils/jwt'
 import { useDispatch } from 'react-redux'
 import { setInforEmployee, setIsAuthenticatedEmployee } from '../../redux/reducers/Admin'
-const { Title } = Typography
 const { Header, Footer, Content } = Layout
 
 const SignIn = () => {
@@ -20,7 +19,6 @@ const SignIn = () => {
             .match(/^\d{10}$/)
     }
     const onFinish = async (values) => {
-        console.log(values)
         const dataLogin = {
             phoneNumber: values?.sdt,
             password: values?.mk
@@ -34,6 +32,7 @@ const SignIn = () => {
             let res = await postLogin(dataLogin)
             if (res.status == 200) {
                 jwt.setToken(res.data.access_token)
+                console.log(jwt.getUserRole())
                 if (jwt.getUserRole() !== 'CUSTOMER') {
                     let ress = await getInforEmployee()
                     dispastch(setInforEmployee(ress.data))

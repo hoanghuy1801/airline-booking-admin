@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Table, Row, Col, Button, DatePicker, Typography } from 'antd'
 import { openNotification } from '../../../utils/Notification'
-import { getListFlight } from '../../../services/apiAdmin'
+import { getListFlight, statisticalPopularFlight } from '../../../services/apiAdmin'
 import locale from 'antd/locale/vi_VN'
 import 'dayjs/locale/vi'
 import LocaleProvider from 'antd/es/locale'
+import { formatCurrency } from '../../../utils/format'
 
 const { RangePicker } = DatePicker
 const { Text } = Typography
@@ -13,10 +14,14 @@ const PopularFlight = () => {
     const [listFight, setListFight] = useState([])
 
     const [currentPage, setCurrentPage] = useState(1)
-
+    const currentYear = new Date().getFullYear()
+    const firstDayOfYear = new Date(currentYear, 0, 1)
+    const lastDayOfYear = new Date(currentYear, 11, 31)
+    const formattedFirstDay = firstDayOfYear.toLocaleDateString('en-CA')
+    const formattedLastDay = lastDayOfYear.toLocaleDateString('en-CA')
+    const [fromDate, setFromDate] = useState(formattedFirstDay)
+    const [toDate, setToDate] = useState(formattedLastDay)
     const [totalCount, setTotalCount] = useState(0)
-    const [sourceAirportId, setSourceAirportId] = useState(0)
-    const [destinationAirportId, setDestinationAirportId] = useState(0)
 
     // eslint-disable-next-line no-unused-vars
     const onChange = (pagination, filters, sorter, extra) => {
@@ -27,15 +32,6 @@ const PopularFlight = () => {
         fechListFight()
     }, [currentPage, status])
 
-    // eslint-disable-next-line no-unused-vars
-    const onChangeSourceAirport = (value, label) => {
-        setSourceAirportId(value)
-    }
-
-    // eslint-disable-next-line no-unused-vars
-    const onDestinationAirport = (value, label) => {
-        setDestinationAirportId(value)
-    }
     const dataSource = listFight.map((item, index) => ({
         ...item,
         stt: index + currentPage * 10 - 9
@@ -45,11 +41,11 @@ const PopularFlight = () => {
         const data = {
             page: currentPage,
             size: 10,
-            sourceAirportId: sourceAirportId === 0 ? '' : sourceAirportId,
-            destinationAirportId: destinationAirportId === 0 ? '' : destinationAirportId
+            fromDate: fromDate,
+            toDate: toDate
         }
         try {
-            let res = await getListFlight(status, data)
+            let res = await statisticalPopularFlight(data)
             setListFight(res.data.items)
             setTotalCount(res.data.totalCount)
         } catch (e) {
@@ -60,7 +56,7 @@ const PopularFlight = () => {
         {
             title: 'STT',
             dataIndex: 'stt',
-            width: 60,
+            width: 10,
             sorter: {
                 compare: (a, b) => a.stt - b.stt,
                 multiple: 1
@@ -104,32 +100,36 @@ const PopularFlight = () => {
         },
         {
             title: 'DOANH THU',
-            dataIndex: 'flightType',
-            sorter: (a, b) => {
-                return a.flightType.localeCompare(b.flightType)
+            dataIndex: 'totalAmount',
+            sorter: {
+                compare: (a, b) => a.totalAmount - b.totalAmount,
+                multiple: 1
             },
             // eslint-disable-next-line no-unused-vars
             render: (value, _record) => {
-                return value === 'DOMESTIC' ? 'Nội địa' : 'Quốc tế'
+                return formatCurrency(value)
             },
-            width: 120
+            width: 120,
+            align: 'end'
         },
         {
             title: 'TỔNG SỐ VÉ',
-            dataIndex: 'flightType',
-            sorter: (a, b) => {
-                return a.flightType.localeCompare(b.flightType)
+            dataIndex: 'totalBooking',
+            sorter: {
+                compare: (a, b) => a.totalBooking - b.totalBooking,
+                multiple: 1
             },
-            // eslint-disable-next-line no-unused-vars
-            render: (value, _record) => {
-                return value === 'DOMESTIC' ? 'Nội địa' : 'Quốc tế'
-            },
-            width: 120
+            width: 120,
+            align: 'center'
         }
     ]
 
     const handleSearch = () => {
         fechListFight()
+    }
+    const handleDateRangeChange = (dates, dateStrings) => {
+        setFromDate(dateStrings[0])
+        setToDate(dateStrings[1])
     }
     return (
         <div
@@ -141,7 +141,7 @@ const PopularFlight = () => {
                 <Col span={12}> </Col>
                 <Col span={12} style={{ display: 'flex', justifyContent: 'end', marginBottom: 20 }}>
                     <LocaleProvider locale={locale}>
-                        <RangePicker size='large' />
+                        <RangePicker size='large' onChange={handleDateRangeChange} />
                     </LocaleProvider>
                     <Button className='btn-save' style={{ marginRight: 20, height: 50 }} onClick={() => handleSearch()}>
                         Tìm

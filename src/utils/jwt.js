@@ -9,19 +9,13 @@ const JWTManager = () => {
 
     const setToken = (accessToken) => {
         inMemoryToken = accessToken
-        // decode and set countdown to refresh
         const decoded = jwtDecode(accessToken)
         userRole = decoded.role
-        // //  setRefreshTokenTimeOut(Number(decoded.exp) - Number(decoded.iat));
         localStorage.setItem('accessToken', inMemoryToken)
     }
 
     const deleteToken = () => {
-        // decode and set countdown to refresh
-        // const decoded = jwtDecode(accessToken)
-        // userId = decoded._id
-        // //  setRefreshTokenTimeOut(Number(decoded.exp) - Number(decoded.iat));
-        localStorage.removeItem('accessToken') // Th
+        localStorage.removeItem('accessToken')
     }
 
     return { getToken, setToken, getUserRole, deleteToken }

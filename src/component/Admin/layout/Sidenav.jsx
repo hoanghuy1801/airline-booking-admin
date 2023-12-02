@@ -9,6 +9,7 @@ import {
     IconChartBar,
     IconTicket
 } from '@tabler/icons-react'
+import jwt from '../../../utils/jwt'
 function Sidenav({ color }) {
     const { pathname } = useLocation()
     const page = pathname.replace('/', '')
@@ -77,20 +78,25 @@ function Sidenav({ color }) {
                         <span className='label'>Tài khoản</span>
                     </NavLink>
                 </Menu.Item>
-                <Menu.Item key='3'>
-                    <NavLink to='/admins/employee'>
-                        <span
-                            className='icon'
-                            style={{
-                                background: page === 'admins/employee' ? color : ''
-                            }}
-                        >
-                            {profiles}
-                        </span>
+                {jwt.getUserRole() !== 'EMPLOYEE' ? (
+                    <Menu.Item key='3'>
+                        <NavLink to='/admins/employee'>
+                            <span
+                                className='icon'
+                                style={{
+                                    background: page === 'admins/employee' ? color : ''
+                                }}
+                            >
+                                {profiles}
+                            </span>
 
-                        <span className='label'>Nhân viên</span>
-                    </NavLink>
-                </Menu.Item>
+                            <span className='label'>Nhân viên</span>
+                        </NavLink>
+                    </Menu.Item>
+                ) : (
+                    ''
+                )}
+
                 <Menu.Item key='4'>
                     <NavLink to='/admins/flight'>
                         <IconPlaneTilt
@@ -113,12 +119,7 @@ function Sidenav({ color }) {
                         <IconTicket
                             className='icon'
                             style={{
-                                color:
-                                    page === 'admins/booking' ||
-                                    page === 'admins/flight/create' ||
-                                    page === 'admins/flight/edit'
-                                        ? color
-                                        : ''
+                                color: page === 'admins/booking' || page === 'admins/booking/edit' ? color : ''
                             }}
                         />
 

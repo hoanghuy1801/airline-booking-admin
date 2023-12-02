@@ -51,7 +51,9 @@ const TicketClassRevenue = () => {
         total: `${formatCurrency(listRevenueSeat?.amountTotal)}`,
         ratioAmount: <Progress percent={Math.round((listRevenueSeat?.amountTotal / totalAmount) * 100)} size='small' />,
         totalQuantity: `${listRevenueSeat?.totalBooking}`,
-        ratioQuantity: <Progress percent={(Number(listRevenueSeat?.totalBooking) / totalBooking) * 100} size='small' />
+        ratioQuantity: (
+            <Progress percent={Math.round((Number(listRevenueSeat?.totalBooking) / totalBooking) * 100)} size='small' />
+        )
     }))
 
     return (
