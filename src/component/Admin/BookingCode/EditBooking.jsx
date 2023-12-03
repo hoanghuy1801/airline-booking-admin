@@ -6,10 +6,12 @@ import { useSelector } from 'react-redux'
 import { CaretRightOutlined } from '@ant-design/icons'
 import { formatCurrency, formatDate, formatDateString, formatTimeHHMM } from '../../../utils/format'
 import { changeStatusAdmin, changeStatusBookingPayment } from '../../../utils/utils'
-import locale from 'antd/locale/vi_VN'
 import 'dayjs/locale/vi'
-import LocaleProvider from 'antd/es/locale'
 import { openNotification } from '../../../utils/Notification'
+import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+import moment from 'moment'
+dayjs.extend(customParseFormat)
 const { Text } = Typography
 
 const EditBooking = () => {
@@ -23,7 +25,7 @@ const EditBooking = () => {
             setListCountries(res.data)
         }
     }
-
+    const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY', 'DD-MM-YYYY', 'DD-MM-YY']
     const bookingDetail = useSelector((state) => state.Admin?.bookingById?.bookingDetail)
     const flightAwayDetail = useSelector((state) => state.Admin?.bookingById?.flightAwayDetail)
     const flightReturnDetail = useSelector((state) => state.Admin?.bookingById?.flightReturnDetail)
@@ -154,7 +156,6 @@ const EditBooking = () => {
         data.push(...aduls)
         data.push(...childs)
         data.push(...infants)
-
         try {
             await updateBooking(bookingDetail?.id, data)
             openNotification('success', 'Thông báo', `Đã Cập Nhật Thông Tin Thành Công `)
@@ -163,6 +164,7 @@ const EditBooking = () => {
             openNotification('error', 'Thông báo', e.response.data.error.message)
         }
     }
+    console.log('ứdsds', infants)
     return (
         <div
             className='ant-card criclebox tablespace mb-24'
@@ -316,7 +318,7 @@ const EditBooking = () => {
                                         key: '1',
                                         label: (
                                             <div style={{ fontSize: '18px', fontWeight: 600 }}>
-                                                Trẻ Em:{form?.lastName}
+                                                Em Bé: {form?.lastName}
                                                 {form?.firstName}
                                             </div>
                                         ),
@@ -378,20 +380,18 @@ const EditBooking = () => {
                                                             <Text className='text-passenger'>Ngày Sinh</Text>
                                                         </Row>
                                                         <Row>
-                                                            <LocaleProvider locale={locale}>
-                                                                <DatePicker
-                                                                    style={{ width: '90%' }}
-                                                                    placeholder=''
-                                                                    format='DD/MM/YYYY'
-                                                                    onChange={(date, dateString) =>
-                                                                        handleDateChangeInfants(
-                                                                            form.id,
-                                                                            date,
-                                                                            dateString
-                                                                        )
-                                                                    }
-                                                                />
-                                                            </LocaleProvider>
+                                                            <DatePicker
+                                                                style={{ width: '90%' }}
+                                                                placeholder=''
+                                                                defaultValue={dayjs(
+                                                                    moment(form?.dateOfBirth).format('DD/MM/YYYY'),
+                                                                    dateFormatList[0]
+                                                                )}
+                                                                format={dateFormatList}
+                                                                onChange={(date, dateString) =>
+                                                                    handleDateChangeInfants(form.id, date, dateString)
+                                                                }
+                                                            />
                                                         </Row>
                                                     </Col>
                                                 </Row>
@@ -480,20 +480,18 @@ const EditBooking = () => {
                                                             <Text className='text-passenger'>Ngày Sinh</Text>
                                                         </Row>
                                                         <Row>
-                                                            <LocaleProvider locale={locale}>
-                                                                <DatePicker
-                                                                    style={{ width: '90%' }}
-                                                                    placeholder=''
-                                                                    format='DD/MM/YYYY'
-                                                                    onChange={(date, dateString) =>
-                                                                        handleDateChangeChilds(
-                                                                            form.id,
-                                                                            date,
-                                                                            dateString
-                                                                        )
-                                                                    }
-                                                                />
-                                                            </LocaleProvider>
+                                                            <DatePicker
+                                                                style={{ width: '90%' }}
+                                                                placeholder=''
+                                                                defaultValue={dayjs(
+                                                                    moment(form?.dateOfBirth).format('DD/MM/YYYY'),
+                                                                    dateFormatList[0]
+                                                                )}
+                                                                format={dateFormatList}
+                                                                onChange={(date, dateString) =>
+                                                                    handleDateChangeChilds(form.id, date, dateString)
+                                                                }
+                                                            />
                                                         </Row>
                                                     </Col>
                                                 </Row>
@@ -588,20 +586,18 @@ const EditBooking = () => {
                                                                 <Text className='text-passenger'>Ngày Sinh*</Text>
                                                             </Row>
                                                             <Row>
-                                                                <LocaleProvider locale={locale}>
-                                                                    <DatePicker
-                                                                        style={{ width: '90%' }}
-                                                                        placeholder=''
-                                                                        format='DD/MM/YYYY'
-                                                                        onChange={(date, dateString) =>
-                                                                            handleDateChangeAduls(
-                                                                                form.id,
-                                                                                date,
-                                                                                dateString
-                                                                            )
-                                                                        }
-                                                                    />
-                                                                </LocaleProvider>
+                                                                <DatePicker
+                                                                    style={{ width: '90%' }}
+                                                                    placeholder=''
+                                                                    defaultValue={dayjs(
+                                                                        moment(form?.dateOfBirth).format('DD/MM/YYYY'),
+                                                                        dateFormatList[0]
+                                                                    )}
+                                                                    format={dateFormatList}
+                                                                    onChange={(date, dateString) =>
+                                                                        handleDateChangeAduls(form.id, date, dateString)
+                                                                    }
+                                                                />
                                                             </Row>
                                                         </Col>
                                                         <Col span={12}>

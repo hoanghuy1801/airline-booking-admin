@@ -5,9 +5,14 @@ import locale from 'antd/locale/vi_VN'
 import 'dayjs/locale/vi'
 import { statisticalClient, statisticalRevenue } from '../../../services/apiAdmin'
 import { openNotification } from '../../../utils/Notification'
-import { formatCurrency } from '../../../utils/format'
+import { formatCurrency, formatDate } from '../../../utils/format'
 import EChartStatistics from './EChartStatistics'
+import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+import moment from 'moment'
+dayjs.extend(customParseFormat)
 const { RangePicker } = DatePicker
+const dateFormat = 'DD/MM/YYYY'
 const Statistics = () => {
     const { Title } = Typography
     const currentYear = new Date().getFullYear()
@@ -20,6 +25,7 @@ const Statistics = () => {
     const [fromDate, setFromDate] = useState(formattedFirstDay)
     const [toDate, setToDate] = useState(formattedLastDay)
     const [year, setYear] = useState(currentYear)
+
     useEffect(() => {
         fechStatisticalClient()
         fechRevenue()
@@ -129,8 +135,8 @@ const Statistics = () => {
         fechRevenue()
     }
     const handleDateRangeChange = (dates, dateStrings) => {
-        setFromDate(dateStrings[0])
-        setToDate(dateStrings[1])
+        setFromDate(formatDate(dateStrings[0]))
+        setToDate(formatDate(dateStrings[1]))
     }
     const handleDatePickerChange = (date, dateString) => {
         setYear(dateString)
@@ -146,7 +152,15 @@ const Statistics = () => {
                     {' '}
                     <Col span={6}>
                         <LocaleProvider locale={locale}>
-                            <RangePicker size='large' format='DD/MM/YYYY' onChange={handleDateRangeChange} />
+                            <RangePicker
+                                size='large'
+                                defaultValue={[
+                                    dayjs(moment(fromDate).format('DD/MM/YYYY'), dateFormat),
+                                    dayjs(moment(toDate).format('DD/MM/YYYY'), dateFormat)
+                                ]}
+                                onChange={handleDateRangeChange}
+                                format={dateFormat}
+                            />
                         </LocaleProvider>
                     </Col>
                     <Col span={4}>

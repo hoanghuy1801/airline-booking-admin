@@ -100,15 +100,7 @@ const CreateAdmin = () => {
                     <Row className='avata-admin'>
                         <Avatar size={150} icon={<UserOutlined />} />
                     </Row>
-                    <Row className='avata-admin' style={{ paddingTop: 20 }}>
-                        <a>
-                            <i>
-                                <u> Cập Nhật Ảnh Đại Diện</u>
-                            </i>
-                        </a>
-                    </Row>
                 </Col>
-
                 <Col span={8}>
                     <Form form={form} layout='vertical'>
                         <Form.Item name='fullName' label='Họ& Tên:' onChange={(event) => setName(event.target.value)}>

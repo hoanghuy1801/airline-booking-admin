@@ -1,14 +1,17 @@
-import { Avatar, Button, Col, DatePicker, Form, Input, Radio, Row, Select, Typography } from 'antd'
+import { Avatar, Button, Col, DatePicker, Form, Input, Row, Select, Typography } from 'antd'
 import { useEffect, useState } from 'react'
-import { UserOutlined } from '@ant-design/icons'
 import { editPassenger, getCountries } from '../../../services/apiAdmin'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { openNotification } from '../../../utils/Notification'
-import { editEmployee } from '../../../services/apiAdmin'
+
 import { formatDate } from '../../../utils/format'
 import { getAcronym } from '../../../utils/utils'
-
+import 'dayjs/locale/vi'
+import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+import moment from 'moment'
+dayjs.extend(customParseFormat)
 const { Text } = Typography
 
 const EditPassenger = () => {
@@ -22,6 +25,7 @@ const EditPassenger = () => {
             setListCountries(res.data)
         }
     }
+    const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY', 'DD-MM-YYYY', 'DD-MM-YY']
     const [listCountries, setListCountries] = useState([])
     const [firstName, setFirstName] = useState(inforPassenger?.firstName)
     const [lastName, setLastName] = useState(inforPassenger?.lastName)
@@ -120,7 +124,8 @@ const EditPassenger = () => {
                             <DatePicker
                                 size='large'
                                 onChange={onDateOfBirth}
-                                format='DD/MM/YYYY'
+                                defaultValue={dayjs(moment(dateOfBirth).format('DD/MM/YYYY'), dateFormatList[0])}
+                                format={dateFormatList}
                                 placeholder=''
                                 style={{
                                     width: '90%'

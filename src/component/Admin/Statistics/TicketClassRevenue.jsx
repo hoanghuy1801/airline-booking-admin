@@ -6,8 +6,12 @@ import locale from 'antd/locale/vi_VN'
 import 'dayjs/locale/vi'
 import { getRevenueInTwoYear, statisticalRevenueSeat } from '../../../services/apiAdmin'
 import { openNotification } from '../../../utils/Notification'
-import { formatCurrency } from '../../../utils/format'
-
+import { formatCurrency, formatDate } from '../../../utils/format'
+import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+import moment from 'moment'
+dayjs.extend(customParseFormat)
+const dateFormat = 'DD/MM/YYYY'
 const { RangePicker } = DatePicker
 const TicketClassRevenue = () => {
     const { Title } = Typography
@@ -35,17 +39,14 @@ const TicketClassRevenue = () => {
         }
     }
     const handleDateRangeChange = (dates, dateStrings) => {
-        setFromDate(dateStrings[0])
-        setToDate(dateStrings[1])
+        setFromDate(formatDate(dateStrings[0]))
+        setToDate(formatDate(dateStrings[1]))
     }
     const hanldeApply = () => {
         fechHome()
     }
-    console.log('listRevenueSeat', listRevenueSeat)
     const totalBooking = listRevenueSeat.reduce((acc, item) => acc + +item.totalBooking, 0)
     const totalAmount = listRevenueSeat.reduce((acc, item) => acc + item.amountTotal, 0)
-    console.log('totalBooking', (Number(listRevenueSeat[0]?.totalBooking) / totalBooking) * 100)
-    console.log('totalAmount', totalAmount)
     const list = listRevenueSeat.map((listRevenueSeat, index) => ({
         Title: `${listRevenueSeat?.seatName} - ${listRevenueSeat?.seatClass}`,
         total: `${formatCurrency(listRevenueSeat?.amountTotal)}`,
@@ -67,7 +68,15 @@ const TicketClassRevenue = () => {
                     {' '}
                     <Col span={6}>
                         <LocaleProvider locale={locale}>
-                            <RangePicker size='large' onChange={handleDateRangeChange} />
+                            <RangePicker
+                                size='large'
+                                onChange={handleDateRangeChange}
+                                defaultValue={[
+                                    dayjs(moment(fromDate).format('DD/MM/YYYY'), dateFormat),
+                                    dayjs(moment(toDate).format('DD/MM/YYYY'), dateFormat)
+                                ]}
+                                format={dateFormat}
+                            />
                         </LocaleProvider>
                     </Col>
                     <Col span={4}>

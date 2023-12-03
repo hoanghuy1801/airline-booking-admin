@@ -7,7 +7,10 @@ import { useSelector } from 'react-redux'
 import { openNotification } from '../../../utils/Notification'
 import { editEmployee } from '../../../services/apiAdmin'
 import { formatDate } from '../../../utils/format'
-
+import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+import moment from 'moment'
+dayjs.extend(customParseFormat)
 const { Text } = Typography
 
 const EditAdmin = () => {
@@ -21,6 +24,7 @@ const EditAdmin = () => {
             setListCountries(res.data)
         }
     }
+    const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY', 'DD-MM-YYYY', 'DD-MM-YY']
     const [listCountries, setListCountries] = useState([])
     const [name, setName] = useState(employeeById?.name)
     const [dateOfBirth, setDateOfBirth] = useState(employeeById?.dateOfBirth)
@@ -70,6 +74,7 @@ const EditAdmin = () => {
             openNotification('error', 'Thông báo', e.response.data.error.message)
         }
     }
+    const DateOfBirth = moment(employeeById?.dateOfBirth).format('DD/MM/YYYY')
     return (
         <div
             className='ant-card criclebox tablespace mb-24'
@@ -89,13 +94,6 @@ const EditAdmin = () => {
                     <Row className='avata-admin'>
                         <Avatar size={150} icon={<UserOutlined />} />
                     </Row>
-                    <Row className='avata-admin' style={{ paddingTop: 20 }}>
-                        <a>
-                            <i>
-                                <u> Cập Nhật Ảnh Đại Diện</u>
-                            </i>
-                        </a>
-                    </Row>
                 </Col>
 
                 <Col span={8}>
@@ -111,12 +109,13 @@ const EditAdmin = () => {
                         <Form.Item name='DateOfBirth' label='Ngày sinh:'>
                             <DatePicker
                                 onChange={onDateOfBirth}
-                                format='DD/MM/YYYY'
                                 placeholder=''
                                 size='large'
                                 style={{
                                     width: '90%'
                                 }}
+                                defaultValue={dayjs(DateOfBirth, dateFormatList[0])}
+                                format={dateFormatList}
                             />
                         </Form.Item>
                         <Form.Item name='gender' label='Giới Tính:'>

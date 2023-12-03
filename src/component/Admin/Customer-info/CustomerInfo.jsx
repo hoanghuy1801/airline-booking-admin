@@ -7,6 +7,12 @@ import { useSelector } from 'react-redux'
 import { editEmployee } from '../../../services/apiAdmin'
 import { formatDate } from '../../../utils/format'
 import { openNotification } from '../../../utils/Notification'
+import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+import moment from 'moment'
+import { getAcronym } from '../../../utils/utils'
+dayjs.extend(customParseFormat)
+
 const { Text } = Typography
 const CustomerInfo = () => {
     const InforEmployee = useSelector((state) => state.Admin.InforEmployee)
@@ -17,6 +23,7 @@ const CustomerInfo = () => {
     const [email, setEmail] = useState(InforEmployee?.email)
     const [country, setCountry] = useState(InforEmployee?.country)
     const [address, setAddress] = useState(InforEmployee?.address)
+    const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY', 'DD-MM-YYYY', 'DD-MM-YY']
     useEffect(() => {
         fechListCountries()
     }, [])
@@ -59,11 +66,11 @@ const CustomerInfo = () => {
         try {
             await editEmployee(InforEmployee?.id, data)
             openNotification('success', 'Thông báo', 'Sửa thông tin thành công')
-            //  navigate('/admins/customer-info')
         } catch (e) {
             openNotification('error', 'Thông báo', e.response.data.error.message)
         }
     }
+    const DateOfBirth = moment(InforEmployee?.dateOfBirth).format('DD/MM/YYYY')
     return (
         <div
             className='ant-card criclebox tablespace mb-24'
@@ -78,14 +85,21 @@ const CustomerInfo = () => {
             <Row>
                 <Col span={8}>
                     <Row className='avata-admin'>
-                        <Avatar size={150} icon={<UserOutlined />} />
+                        <Avatar
+                            size={140}
+                            style={{
+                                backgroundColor: `${InforEmployee?.color}`,
+                                marginLeft: 20
+                            }}
+                        >
+                            {getAcronym(InforEmployee.name)}
+                        </Avatar>
                     </Row>
-                    <Row className='avata-admin' style={{ paddingTop: 20 }}>
-                        <a>
-                            <i>
-                                <u> Cập Nhật Ảnh Đại Diện</u>
-                            </i>
-                        </a>
+                    <Row
+                        className='avata-admin'
+                        style={{ paddingTop: 20, paddingLeft: 20, fontSize: 18, fontWeight: 500, color: 'black' }}
+                    >
+                        {InforEmployee?.employeeCode} - {InforEmployee?.name}
                     </Row>
                 </Col>
 
@@ -107,6 +121,8 @@ const CustomerInfo = () => {
                                     width: '90%'
                                 }}
                                 size='large'
+                                defaultValue={dayjs(DateOfBirth, dateFormatList[0])}
+                                format={dateFormatList}
                             />
                         </Form.Item>
                         <Form.Item name='gender' label='Giới Tính:' onChange={(event) => setGender(event.target.value)}>

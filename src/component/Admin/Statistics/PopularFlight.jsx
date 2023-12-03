@@ -5,11 +5,15 @@ import { getListFlight, statisticalPopularFlight } from '../../../services/apiAd
 import locale from 'antd/locale/vi_VN'
 import 'dayjs/locale/vi'
 import LocaleProvider from 'antd/es/locale'
-import { formatCurrency } from '../../../utils/format'
+import { formatCurrency, formatDate } from '../../../utils/format'
+import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+import moment from 'moment'
+dayjs.extend(customParseFormat)
 
 const { RangePicker } = DatePicker
 const { Text } = Typography
-
+const dateFormat = 'DD/MM/YYYY'
 const PopularFlight = () => {
     const [listFight, setListFight] = useState([])
 
@@ -128,8 +132,8 @@ const PopularFlight = () => {
         fechListFight()
     }
     const handleDateRangeChange = (dates, dateStrings) => {
-        setFromDate(dateStrings[0])
-        setToDate(dateStrings[1])
+        setFromDate(formatDate(dateStrings[0]))
+        setToDate(formatDate(dateStrings[1]))
     }
     return (
         <div
@@ -141,7 +145,15 @@ const PopularFlight = () => {
                 <Col span={12}> </Col>
                 <Col span={12} style={{ display: 'flex', justifyContent: 'end', marginBottom: 20 }}>
                     <LocaleProvider locale={locale}>
-                        <RangePicker size='large' onChange={handleDateRangeChange} />
+                        <RangePicker
+                            size='large'
+                            onChange={handleDateRangeChange}
+                            defaultValue={[
+                                dayjs(moment(fromDate).format('DD/MM/YYYY'), dateFormat),
+                                dayjs(moment(toDate).format('DD/MM/YYYY'), dateFormat)
+                            ]}
+                            format={dateFormat}
+                        />
                     </LocaleProvider>
                     <Button className='btn-save' style={{ marginRight: 20, height: 50 }} onClick={() => handleSearch()}>
                         Tìm

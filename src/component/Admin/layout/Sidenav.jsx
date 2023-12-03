@@ -160,7 +160,10 @@ function Sidenav({ color }) {
                         to='/admins/statistics/overview'
                         style={{
                             backgroundColor:
-                                page === 'admins/statistics/ticket-sales' || page === 'admins/statistics/popular-flight'
+                                page === 'admins/statistics/overview' ||
+                                page === 'admins/statistics/ticket-sales' ||
+                                page === 'admins/statistics/popular-flight' ||
+                                page === 'admins/statistics/ticket-class-revenue'
                                     ? '#fff'
                                     : '',
                             boxShadow: '0 20px 27px rgb(0 0 0 / 5%)'
@@ -170,14 +173,17 @@ function Sidenav({ color }) {
                             className='icon'
                             style={{
                                 backgroundColor:
+                                    page === 'admins/statistics/overview' ||
                                     page === 'admins/statistics/ticket-sales' ||
-                                    page === 'admins/statistics/popular-flight'
+                                    page === 'admins/statistics/popular-flight' ||
+                                    page === 'admins/statistics/ticket-class-revenue'
                                         ? color
                                         : '',
                                 color:
                                     page === 'admins/statistics/overview' ||
                                     page === 'admins/statistics/ticket-sales' ||
-                                    page === 'admins/statistics/popular-flight'
+                                    page === 'admins/statistics/popular-flight' ||
+                                    page === 'admins/statistics/ticket-class-revenue'
                                         ? color
                                         : ''
                             }}

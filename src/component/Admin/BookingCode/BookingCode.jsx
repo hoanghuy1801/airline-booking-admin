@@ -260,6 +260,10 @@ const BookingCode = () => {
         fechListBooking()
     }
     const handleCancel = async () => {
+        if (idList.length === 0) {
+            openNotification('error', 'Thông báo', `Bạn chưa chọn mã đặt vé để hủy`)
+            return
+        }
         let data = {
             ids: idList
         }

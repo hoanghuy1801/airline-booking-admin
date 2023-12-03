@@ -6,9 +6,15 @@ import imgcreateFlight from '../../../assets/admin/createFlight.png'
 import { useNavigate } from 'react-router-dom'
 import { createFlight, getAirports, getListAircraft } from '../../../services/apiAdmin'
 import { openNotification } from '../../../utils/Notification'
-
+import moment from 'moment/moment'
+const { RangePicker } = DatePicker
 const { Text } = Typography
-
+const disabledDate = (current) => {
+    // Lấy ngày hiện tại
+    const today = moment().startOf('day')
+    // Nếu ngày hiện tại lớn hơn hoặc bằng ngày đang xét thì vô hiệu hóa
+    return current && current < today
+}
 const CreateFlight = () => {
     const [listAirports, setListAirports] = useState([])
     const [listAircraft, setListAircraft] = useState([])
@@ -33,6 +39,7 @@ const CreateFlight = () => {
             setListAirports(res.data)
         }
     }
+    console.log(listAircraft)
     const fechListAircraft = async () => {
         let data = {
             sourceAirportId: sourceAirportId,
@@ -40,7 +47,7 @@ const CreateFlight = () => {
             departureDate: departureDate,
             arrivalDate: arrivalDate
         }
-        let res = await getListAircraft()
+        let res = await getListAircraft(data)
         if (res.status == 200) {
             setListAircraft(res.data)
         }
@@ -63,11 +70,10 @@ const CreateFlight = () => {
     }
 
     const onOk = (value) => {
-        setDepartureDate(value?.$d)
+        setDepartureDate(value[0]?.$d)
+        setArrivalDate(value[1]?.$d)
     }
-    const onOksetArrivalDate = (value) => {
-        setArrivalDate(value?.$d)
-    }
+
     const handleContinue = async () => {
         const data = {
             sourceAirportId: sourceAirportId,
@@ -112,7 +118,10 @@ const CreateFlight = () => {
             openNotification('error', 'Thông báo', e.response.data.error.message)
         }
     }
-
+    const onChange = (value, dateString) => {
+        console.log('Selected Time: ', value)
+        console.log('Formatted Selected Time: ', dateString)
+    }
     return (
         <div
             className='ant-card criclebox tablespace mb-24'
@@ -178,28 +187,20 @@ const CreateFlight = () => {
                                 ))}
                             </Select>
                         </Form.Item>
-                        <Form.Item label='Ngày giờ cất cánh:'>
-                            <DatePicker
-                                placeholder=''
+                        <Form.Item label='Ngày giờ cất hạ cánh:'>
+                            <RangePicker
+                                placeholder={['Ngày giờ cất cánh', 'Ngày giờ hạ cánh']}
+                                showTime={{
+                                    format: 'HH:mm'
+                                }}
                                 style={{
                                     width: '90%'
                                 }}
-                                size='large'
-                                showTime
+                                disabledDate={disabledDate}
+                                format='HH:mm DD/MM/YYYY '
+                                onChange={onChange}
                                 onOk={onOk}
-                                format='HH:mm DD/MM/YYYY '
-                            />
-                        </Form.Item>
-                        <Form.Item label=' Ngày giờ hạ cánh:'>
-                            <DatePicker
-                                placeholder=''
-                                style={{
-                                    width: '90%'
-                                }}
                                 size='large'
-                                showTime
-                                onOk={onOksetArrivalDate}
-                                format='HH:mm DD/MM/YYYY '
                             />
                         </Form.Item>
                         <Form.Item name='status' label='Máy bay chở khách:'>
@@ -217,11 +218,11 @@ const CreateFlight = () => {
                                     <Option
                                         key={item.id}
                                         value={item.id}
-                                        label={item?.aircraftName}
-                                        defaultValue={item?.aircraftName}
+                                        label={item?.aircraftCode}
+                                        defaultValue={listAircraft[0]?.aircraftCode}
                                     >
                                         <>
-                                            <Row className='text-cityname'>{item?.aircraftName}</Row>
+                                            <Row className='text-cityname'>{item?.aircraftCode}</Row>
                                         </>
                                     </Option>
                                 ))}

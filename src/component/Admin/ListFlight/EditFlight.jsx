@@ -8,9 +8,19 @@ import { getAirports } from '../../../services/apiAdmin'
 import { createFlight, editFlight, getListAircraft } from '../../../services/apiAdmin'
 import { openNotification } from '../../../utils/Notification'
 import { useSelector } from 'react-redux'
-
+import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+import moment from 'moment'
+dayjs.extend(customParseFormat)
+const { RangePicker } = DatePicker
+const disabledDate = (current) => {
+    // Lấy ngày hiện tại
+    const today = moment().startOf('day')
+    // Nếu ngày hiện tại lớn hơn hoặc bằng ngày đang xét thì vô hiệu hóa
+    return current && current < today
+}
 const { Text } = Typography
-
+const dateFormat = 'HH:mm DD/MM/YYYY'
 const EditFlight = () => {
     const flightById = useSelector((state) => state.Admin.flightById)
     const [listAirports, setListAirports] = useState([])
@@ -54,11 +64,10 @@ const EditFlight = () => {
     }
 
     const onOk = (value) => {
-        setDepartureDate(value?.$d)
+        setDepartureDate(value[0]?.$d)
+        setArrivalDate(value[1]?.$d)
     }
-    const onOksetArrivalDate = (value) => {
-        setArrivalDate(value?.$d)
-    }
+
     const handleContinue = async () => {
         const data = {
             aircraftId: aircraftId,
@@ -88,7 +97,8 @@ const EditFlight = () => {
             openNotification('error', 'Thông báo', e.response.data.error.message)
         }
     }
-
+    const departure = moment(departureDate).format('HH:mm DD/MM/YYYY')
+    const arrival = moment(arrivalDate).format('HH:mm DD/MM/YYYY')
     return (
         <div
             className='ant-card criclebox tablespace mb-24'
@@ -156,30 +166,23 @@ const EditFlight = () => {
                                 ))}
                             </Select>
                         </Form.Item>
-                        <Form.Item label='Ngày giờ cất cánh:'>
-                            <DatePicker
-                                placeholder=''
+                        <Form.Item label='Ngày giờ cất hạ cánh:'>
+                            <RangePicker
+                                placeholder={['Ngày giờ cất cánh', 'Ngày giờ hạ cánh']}
+                                showTime={{
+                                    format: 'HH:mm'
+                                }}
                                 style={{
                                     width: '90%'
                                 }}
-                                size='large'
-                                showTime
+                                disabledDate={disabledDate}
                                 onOk={onOk}
-                                format='HH:mm DD/MM/YYYY '
-                            />
-                        </Form.Item>
-                        <Form.Item label=' Ngày giờ hạ cánh:'>
-                            <DatePicker
-                                placeholder=''
-                                style={{
-                                    width: '90%'
-                                }}
                                 size='large'
-                                showTime
-                                onOk={onOksetArrivalDate}
-                                format='HH:mm DD/MM/YYYY '
+                                defaultValue={[dayjs(departure, dateFormat), dayjs(arrival, dateFormat)]}
+                                format={dateFormat}
                             />
                         </Form.Item>
+
                         <Form.Item name='status' label='Máy bay chở khách'>
                             <Select
                                 style={{
@@ -196,11 +199,11 @@ const EditFlight = () => {
                                     <Option
                                         key={item.id}
                                         value={item.id}
-                                        label={item?.aircraftName}
-                                        defaultValue={item?.aircraftName}
+                                        label={item?.aircraftCode}
+                                        defaultValue={item?.aircraftCode}
                                     >
                                         <>
-                                            <Row className='text-cityname'>{item?.aircraftName}</Row>
+                                            <Row className='text-cityname'>{item?.aircraftCode}</Row>
                                         </>
                                     </Option>
                                 ))}
