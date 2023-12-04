@@ -16,26 +16,78 @@ import { useDispatch } from 'react-redux'
 import { setFlightById } from '../../../redux/reducers/Admin'
 
 const { Text } = Typography
-const itemss = [
-    {
-        label: 'Hoạt động',
-        key: 'act'
-    },
-    {
-        type: 'divider'
-    },
-    {
-        label: 'Tạm ngưng',
-        key: 'pen'
-    },
-    {
-        type: 'divider'
-    },
-    {
-        label: 'Chỉnh sửa',
-        key: 'edit'
+const itemss = (status) => {
+    console.log('huy', status)
+    const commonItems = [
+        {
+            label: 'Chỉnh sửa',
+            key: 'edit'
+        }
+    ]
+    if (status === 'act') {
+        return [
+            {
+                label: 'Tạm ngưng',
+                key: 'pen'
+            },
+            {
+                type: 'divider'
+            },
+
+            ...commonItems
+        ]
+    } else if (status === 'pen') {
+        return [
+            {
+                label: 'Xóa',
+                key: 'del'
+            },
+            {
+                type: 'divider'
+            },
+
+            ...commonItems
+        ]
+    } else if (status === 'del') {
+        return [
+            {
+                label: 'Hoạt Động',
+                key: 'act'
+            },
+            {
+                type: 'divider'
+            },
+
+            ...commonItems
+        ]
+    } else {
+        return [
+            {
+                label: 'Hoạt Động',
+                key: 'act'
+            },
+            {
+                type: 'divider'
+            },
+            {
+                label: 'Tạm Ngưng',
+                key: 'pen'
+            },
+            {
+                type: 'divider'
+            },
+            {
+                label: 'Xóa',
+                key: 'del'
+            },
+            {
+                type: 'divider'
+            },
+
+            ...commonItems
+        ]
     }
-]
+}
 const items = [
     {
         label: 'Tất cả',
@@ -48,6 +100,10 @@ const items = [
     {
         label: 'Tạm ngưng',
         key: 'pen'
+    },
+    {
+        label: 'Đã Xóa',
+        key: 'del'
     }
 ]
 const ListFlight = () => {
@@ -223,7 +279,7 @@ const ListFlight = () => {
             render: (value, record) => (
                 <Dropdown
                     menu={{
-                        items: itemss.map((item, index) => ({
+                        items: itemss(status).map((item, index) => ({
                             ...item,
                             key: item.key || index.toString()
                         })),
@@ -262,6 +318,9 @@ const ListFlight = () => {
         } else if (e.key === 'pen') {
             setStatus('pen')
             setCurrentPage(1)
+        } else if (e.key === 'del') {
+            setStatus('del')
+            setCurrentPage(1)
         }
     }
 
@@ -288,6 +347,14 @@ const ListFlight = () => {
                 await changeStatusFlight(id, 'PEN')
                 fechListFight()
                 openNotification('success', 'Thông báo', `Đã Tạm Ngưng Chuyến bay ${code}`)
+            } catch (e) {
+                openNotification('error', 'Thông báo', e.response.data.error.message)
+            }
+        } else if (e.key === 'del') {
+            try {
+                await changeStatusFlight(id, 'DEL')
+                fechListFight()
+                openNotification('success', 'Thông báo', `Đã Xóa Chuyến bay ${code}`)
             } catch (e) {
                 openNotification('error', 'Thông báo', e.response.data.error.message)
             }

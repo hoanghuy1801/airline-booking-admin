@@ -10,28 +10,78 @@ import { IconDotsVertical } from '@tabler/icons-react'
 import { useDispatch } from 'react-redux'
 import { setEmployeeById, setInforPassenger } from '../../../redux/reducers/Admin'
 import { useNavigate } from 'react-router-dom'
-
 const { Text } = Typography
-const itemss = [
-    {
-        label: 'Hoạt động',
-        key: 'act'
-    },
-    {
-        type: 'divider'
-    },
-    {
-        label: 'Tạm ngưng',
-        key: 'pen'
-    },
-    {
-        type: 'divider'
-    },
-    {
-        label: 'Chỉnh sửa',
-        key: 'edit'
+const itemss = (status) => {
+    const commonItems = [
+        {
+            label: 'Chỉnh sửa',
+            key: 'edit'
+        }
+    ]
+    if (status === 'ACT') {
+        return [
+            {
+                label: 'Tạm ngưng',
+                key: 'pen'
+            },
+            {
+                type: 'divider'
+            },
+
+            ...commonItems
+        ]
+    } else if (status === 'PEN') {
+        return [
+            {
+                label: 'Xóa',
+                key: 'del'
+            },
+            {
+                type: 'divider'
+            },
+
+            ...commonItems
+        ]
+    } else if (status === 'DEL') {
+        return [
+            {
+                label: 'Hoạt Động',
+                key: 'act'
+            },
+            {
+                type: 'divider'
+            },
+
+            ...commonItems
+        ]
+    } else {
+        return [
+            {
+                label: 'Hoạt Động',
+                key: 'act'
+            },
+            {
+                type: 'divider'
+            },
+            {
+                label: 'Tạm Ngưng',
+                key: 'pen'
+            },
+            {
+                type: 'divider'
+            },
+            {
+                label: 'Xóa',
+                key: 'del'
+            },
+            {
+                type: 'divider'
+            },
+
+            ...commonItems
+        ]
     }
-]
+}
 const items = [
     {
         label: 'Tất cả',
@@ -44,6 +94,10 @@ const items = [
     {
         label: 'Tạm ngưng',
         key: 'pen'
+    },
+    {
+        label: 'Đã xóa',
+        key: 'del'
     }
 ]
 
@@ -174,7 +228,7 @@ const Passenger = () => {
             render: (value, record) => (
                 <Dropdown
                     menu={{
-                        items: itemss.map((item, index) => ({
+                        items: itemss(status).map((item, index) => ({
                             ...item,
                             key: item.key || index.toString()
                         })),
@@ -211,6 +265,9 @@ const Passenger = () => {
         } else if (e.key === 'pen') {
             setStatus('PEN')
             setCurrentPage(1)
+        } else if (e.key === 'del') {
+            setStatus('DEL')
+            setCurrentPage(1)
         }
     }
     const onChange = async (pagination, filters, sorter, extra) => {
@@ -231,6 +288,14 @@ const Passenger = () => {
                 await updateStatusPassenger(id, 'PEN')
                 fechListPassgenger()
                 openNotification('success', 'Thông báo', `Đã Tạm Ngưng Khách Hàng ${code}`)
+            } catch (e) {
+                openNotification('error', 'Thông báo', e.response.data.error.message)
+            }
+        } else if (e.key === 'del') {
+            try {
+                await updateStatusPassenger(id, 'DEL')
+                fechListPassgenger()
+                openNotification('success', 'Thông báo', `Đã Xóa Khách Hàng ${code}`)
             } catch (e) {
                 openNotification('error', 'Thông báo', e.response.data.error.message)
             }

@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { Table, Space, Input, Row, Col, Button, Mentions, Menu, Tag, Dropdown, Typography } from 'antd'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import './ManagerAdmin.css'
-import { actEmployee, getEmployeeId, getListEmployee, penEmployee } from '../../../services/apiAdmin'
+import { actEmployee, delEmployee, getEmployeeId, getListEmployee, penEmployee } from '../../../services/apiAdmin'
 import { openNotification } from '../../../utils/Notification'
 import { changeStatusAdmin } from '../../../utils/utils'
 import { formatDateString } from '../../../utils/format'
@@ -13,26 +13,77 @@ import { setEmployeeById } from '../../../redux/reducers/Admin'
 import { useNavigate } from 'react-router-dom'
 
 const { Text } = Typography
-const itemss = [
-    {
-        label: 'Hoạt động',
-        key: 'act'
-    },
-    {
-        type: 'divider'
-    },
-    {
-        label: 'Tạm ngưng',
-        key: 'pen'
-    },
-    {
-        type: 'divider'
-    },
-    {
-        label: 'Chỉnh sửa',
-        key: 'edit'
+const itemss = (status) => {
+    const commonItems = [
+        {
+            label: 'Chỉnh sửa',
+            key: 'edit'
+        }
+    ]
+    if (status === 'ACT') {
+        return [
+            {
+                label: 'Tạm ngưng',
+                key: 'pen'
+            },
+            {
+                type: 'divider'
+            },
+
+            ...commonItems
+        ]
+    } else if (status === 'PEN') {
+        return [
+            {
+                label: 'Xóa',
+                key: 'del'
+            },
+            {
+                type: 'divider'
+            },
+
+            ...commonItems
+        ]
+    } else if (status === 'DEL') {
+        return [
+            {
+                label: 'Hoạt Động',
+                key: 'act'
+            },
+            {
+                type: 'divider'
+            },
+
+            ...commonItems
+        ]
+    } else {
+        return [
+            {
+                label: 'Hoạt Động',
+                key: 'act'
+            },
+            {
+                type: 'divider'
+            },
+            {
+                label: 'Tạm Ngưng',
+                key: 'pen'
+            },
+            {
+                type: 'divider'
+            },
+            {
+                label: 'Xóa',
+                key: 'del'
+            },
+            {
+                type: 'divider'
+            },
+
+            ...commonItems
+        ]
     }
-]
+}
 const items = [
     {
         label: 'Tất cả',
@@ -45,6 +96,10 @@ const items = [
     {
         label: 'Tạm ngưng',
         key: 'pen'
+    },
+    {
+        label: 'Đã xóa',
+        key: 'del'
     }
 ]
 
@@ -186,7 +241,7 @@ const ManagerAdmin = () => {
             render: (value, record) => (
                 <Dropdown
                     menu={{
-                        items: itemss.map((item, index) => ({
+                        items: itemss(status).map((item, index) => ({
                             ...item,
                             key: item.key || index.toString()
                         })),
@@ -223,6 +278,9 @@ const ManagerAdmin = () => {
         } else if (e.key === 'pen') {
             setStatus('PEN')
             setCurrentPage(1)
+        } else if (e.key === 'del') {
+            setStatus('DEL')
+            setCurrentPage(1)
         }
     }
     const onChange = async (pagination, filters, sorter, extra) => {
@@ -232,6 +290,7 @@ const ManagerAdmin = () => {
         setTextSearch(value)
     }
     const handleClickMe = async (id, code, e) => {
+        console.log('key', e.key)
         if (e.key === 'act') {
             try {
                 await actEmployee(id)
@@ -245,6 +304,15 @@ const ManagerAdmin = () => {
                 await penEmployee(id).then(async () => {
                     fechListEmpoyee()
                     openNotification('success', 'Thông báo', `Đã Tạm Ngưng Nhân Viên ${code}`)
+                })
+            } catch (e) {
+                openNotification('error', 'Thông báo', e.response.data.error.message)
+            }
+        } else if (e.key === 'del') {
+            try {
+                await delEmployee(id).then(async () => {
+                    fechListEmpoyee()
+                    openNotification('success', 'Thông báo', `Đã Xóa Nhân Viên ${code}`)
                 })
             } catch (e) {
                 openNotification('error', 'Thông báo', e.response.data.error.message)

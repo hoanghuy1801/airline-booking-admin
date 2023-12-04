@@ -72,7 +72,7 @@ function changeStatusAdmin(status, vi) {
         vi: {
             ACT: 'Hoạt Động',
             PEN: 'Tạm Ngưng',
-            DEL: 'Đã Hủy'
+            DEL: 'Đã Xóa'
         }
     }
 
