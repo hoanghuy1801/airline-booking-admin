@@ -39,7 +39,6 @@ const CreateFlight = () => {
             setListAirports(res.data)
         }
     }
-    console.log(listAircraft)
     const fechListAircraft = async () => {
         let data = {
             sourceAirportId: sourceAirportId,
@@ -98,6 +97,10 @@ const CreateFlight = () => {
             ]
         }
         try {
+            if (sourceAirportId === destinationAirportId) {
+                openNotification('warning', 'Thông báo', 'Nơi đi nơi đến không thể là một')
+                return
+            }
             if (
                 sourceAirportId === 0 ||
                 destinationAirportId === 0 ||
@@ -111,6 +114,7 @@ const CreateFlight = () => {
                 openNotification('warning', 'Thông báo', 'Bạn chưa nhập đủ thông tin')
                 return
             }
+
             await createFlight(data)
             openNotification('success', 'Thông báo', 'Thêm chuyến bay thành công')
             navigate('/admins/flight')

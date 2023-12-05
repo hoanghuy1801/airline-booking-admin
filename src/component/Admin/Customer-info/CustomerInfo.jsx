@@ -1,9 +1,9 @@
 import { Avatar, Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Typography } from 'antd'
 import { useEffect, useState } from 'react'
 import { UserOutlined } from '@ant-design/icons'
-import { getCountries } from '../../../services/apiAdmin'
+import { getCountries, getInforEmployee } from '../../../services/apiAdmin'
 import './CustomerInfo.css'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { editEmployee } from '../../../services/apiAdmin'
 import { formatDate } from '../../../utils/format'
 import { openNotification } from '../../../utils/Notification'
@@ -11,6 +11,7 @@ import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import moment from 'moment'
 import { getAcronym } from '../../../utils/utils'
+import { setInforEmployee } from '../../../redux/reducers/Admin'
 dayjs.extend(customParseFormat)
 
 const { Text } = Typography
@@ -23,6 +24,7 @@ const CustomerInfo = () => {
     const [email, setEmail] = useState(InforEmployee?.email)
     const [country, setCountry] = useState(InforEmployee?.country)
     const [address, setAddress] = useState(InforEmployee?.address)
+    const dispastch = useDispatch()
     const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY', 'DD-MM-YYYY', 'DD-MM-YY']
     useEffect(() => {
         fechListCountries()
@@ -65,6 +67,8 @@ const CustomerInfo = () => {
 
         try {
             await editEmployee(InforEmployee?.id, data)
+            let ress = await getInforEmployee()
+            dispastch(setInforEmployee(ress.data))
             openNotification('success', 'Thông báo', 'Sửa thông tin thành công')
         } catch (e) {
             openNotification('error', 'Thông báo', e.response.data.error.message)

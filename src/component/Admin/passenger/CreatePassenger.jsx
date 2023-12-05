@@ -1,6 +1,6 @@
 import { Button, Col, DatePicker, Form, Input, Row, Select, Typography } from 'antd'
 import { useEffect, useState } from 'react'
-import { CreatePassenger, editPassenger, getCountries } from '../../../services/apiAdmin'
+import { CreatePassenger, getCountries } from '../../../services/apiAdmin'
 import { useNavigate } from 'react-router-dom'
 
 import { openNotification } from '../../../utils/Notification'
@@ -41,6 +41,7 @@ const EditPassenger = () => {
     const handleGender = (value) => {
         setGender(value)
     }
+
     const handleContinue = async () => {
         const data = {
             firstName: firstName,
@@ -53,7 +54,19 @@ const EditPassenger = () => {
             password: password,
             phoneNumber: phoneNumber
         }
-        console.log('huy', data)
+        if (
+            firstName === undefined ||
+            lastName === undefined ||
+            dateOfBirth === '' ||
+            idCard === undefined ||
+            email === undefined ||
+            country === undefined ||
+            password === '' ||
+            phoneNumber === ''
+        ) {
+            openNotification('warning', 'Thông báo', 'Bạn chưa nhập đủ thông tin')
+            return
+        }
         try {
             await CreatePassenger(data)
             openNotification('success', 'Thông báo', 'Tạo Tài Khoản Thành Công')

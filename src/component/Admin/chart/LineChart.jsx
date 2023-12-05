@@ -138,10 +138,10 @@ function LineChart(props) {
                 <div className='sales'>
                     <ul>
                         <li>
-                            {<MinusOutlined />} {currentYear - 1}
+                            {<MinusOutlined />} {currentYear}
                         </li>
                         <li>
-                            {<MinusOutlined />} {currentYear}
+                            {<MinusOutlined />} {currentYear - 1}
                         </li>
                     </ul>
                 </div>

@@ -101,7 +101,7 @@ function LineChartStatistics(props) {
             tooltip: {
                 y: {
                     formatter: function (val) {
-                        return formatCurrency(val)
+                        return val + ' Mã đặt vé'
                     }
                 }
             }
@@ -125,7 +125,7 @@ function LineChartStatistics(props) {
         <>
             <div className='linechart'>
                 <div>
-                    <Title level={5}>API Hiện Thị Tổng Số Lượng Bán Vé </Title>
+                    <Title level={5}>Hiện Thị Tổng Số Lượng Bán Vé </Title>
                 </div>
                 <div className='sales'>
                     <ul>
