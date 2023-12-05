@@ -123,6 +123,14 @@ function changeStatusBookingPayment(status, vi) {
 
     return status // Giữ nguyên trạng thái nếu không tìm thấy phiên bản ngôn ngữ
 }
+function convertToReactJS(date) {
+    const formattedDate = date.toLocaleString('en-US', {
+        timeZone: 'Asia/Ho_Chi_Minh',
+        format: 'YYYY-MM-DD HH:mm'
+    })
+
+    return formattedDate
+}
 export {
     generateRandomID,
     calculateAge,
@@ -131,5 +139,6 @@ export {
     getAcronym,
     changeStatusAdmin,
     changeStatusCancelBooking,
-    changeStatusBookingPayment
+    changeStatusBookingPayment,
+    convertToReactJS
 }

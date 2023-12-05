@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { createFlight, getAirports, getListAircraft } from '../../../services/apiAdmin'
 import { openNotification } from '../../../utils/Notification'
 import moment from 'moment/moment'
+import { convertToReactJS } from '../../../utils/utils'
 const { RangePicker } = DatePicker
 const { Text } = Typography
 const disabledDate = (current) => {
@@ -43,8 +44,8 @@ const CreateFlight = () => {
         let data = {
             sourceAirportId: sourceAirportId,
             destinationAirportId: destinationAirportId,
-            departureDate: departureDate,
-            arrivalDate: arrivalDate
+            departureTime: departureDate,
+            arrivalTime: arrivalDate
         }
         let res = await getListAircraft(data)
         if (res.status == 200) {
