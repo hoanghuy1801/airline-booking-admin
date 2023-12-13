@@ -78,7 +78,7 @@ function Sidenav({ color }) {
                         <span className='label'>Tài khoản</span>
                     </NavLink>
                 </Menu.Item>
-                {jwt.getUserRole() !== 'EMPLOYEE' ? (
+                {jwt.getUserRole() === 'ADMIN' ? (
                     <Menu.Item key='3'>
                         <NavLink to='/admins/employee'>
                             <span
@@ -96,102 +96,121 @@ function Sidenav({ color }) {
                 ) : (
                     ''
                 )}
+                {jwt.getUserRole() === 'MANAGER' ? (
+                    <Menu.Item key='4'>
+                        <NavLink to='/admins/flight'>
+                            <IconPlaneTilt
+                                className='icon'
+                                style={{
+                                    color:
+                                        page === 'admins/flight' ||
+                                        page === 'admins/flight/create' ||
+                                        page === 'admins/flight/edit'
+                                            ? color
+                                            : ''
+                                }}
+                            />
 
-                <Menu.Item key='4'>
-                    <NavLink to='/admins/flight'>
-                        <IconPlaneTilt
-                            className='icon'
-                            style={{
-                                color:
-                                    page === 'admins/flight' ||
-                                    page === 'admins/flight/create' ||
-                                    page === 'admins/flight/edit'
-                                        ? color
-                                        : ''
-                            }}
-                        />
+                            <span className='label'>Chuyến Bay</span>
+                        </NavLink>
+                    </Menu.Item>
+                ) : (
+                    ''
+                )}
+                {jwt.getUserRole() !== 'ADMIN' ? (
+                    <Menu.Item key='5'>
+                        <NavLink to='/admins/booking'>
+                            <IconTicket
+                                className='icon'
+                                style={{
+                                    color: page === 'admins/booking' || page === 'admins/booking/edit' ? color : ''
+                                }}
+                            />
 
-                        <span className='label'>Chuyến Bay</span>
-                    </NavLink>
-                </Menu.Item>
-                <Menu.Item key='5'>
-                    <NavLink to='/admins/booking'>
-                        <IconTicket
-                            className='icon'
-                            style={{
-                                color: page === 'admins/booking' || page === 'admins/booking/edit' ? color : ''
-                            }}
-                        />
+                            <span className='label'> Quản Lý Đặt Vé</span>
+                        </NavLink>
+                    </Menu.Item>
+                ) : (
+                    ''
+                )}
+                {jwt.getUserRole() !== 'ADMIN' ? (
+                    <Menu.Item key='6'>
+                        <NavLink to='/admins/flyCancel'>
+                            <IconPlaneOff
+                                className='icon'
+                                style={{
+                                    color: page === 'admins/flyCancel' ? color : ''
+                                }}
+                            />
 
-                        <span className='label'> Quản Lý Đặt Vé</span>
-                    </NavLink>
-                </Menu.Item>
-                <Menu.Item key='6'>
-                    <NavLink to='/admins/flyCancel'>
-                        <IconPlaneOff
-                            className='icon'
-                            style={{
-                                color: page === 'admins/flyCancel' ? color : ''
-                            }}
-                        />
+                            <span className='label'>Hủy/Hoàn Tiền</span>
+                        </NavLink>
+                    </Menu.Item>
+                ) : (
+                    ''
+                )}
+                {jwt.getUserRole() !== 'ADMIN' ? (
+                    <Menu.Item key='7'>
+                        <NavLink to='/admins/passenger'>
+                            <IconBrandApplePodcast
+                                className='icon'
+                                style={{
+                                    color:
+                                        page === 'admins/passenger' ||
+                                        page === 'admins/passenger/create' ||
+                                        page === 'admins/passenger/edit'
+                                            ? color
+                                            : ''
+                                }}
+                            />
 
-                        <span className='label'>Hủy/Hoàn Tiền</span>
-                    </NavLink>
-                </Menu.Item>
-                <Menu.Item key='7'>
-                    <NavLink to='/admins/passenger'>
-                        <IconBrandApplePodcast
-                            className='icon'
-                            style={{
-                                color:
-                                    page === 'admins/passenger' ||
-                                    page === 'admins/passenger/create' ||
-                                    page === 'admins/passenger/edit'
-                                        ? color
-                                        : ''
-                            }}
-                        />
-
-                        <span className='label'>Khách Hàng</span>
-                    </NavLink>
-                </Menu.Item>
-                <Menu.Item key='8'>
-                    <NavLink
-                        to='/admins/statistics/overview'
-                        style={{
-                            backgroundColor:
-                                page === 'admins/statistics/overview' ||
-                                page === 'admins/statistics/ticket-sales' ||
-                                page === 'admins/statistics/popular-flight' ||
-                                page === 'admins/statistics/ticket-class-revenue'
-                                    ? '#fff'
-                                    : '',
-                            boxShadow: '0 20px 27px rgb(0 0 0 / 5%)'
-                        }}
-                    >
-                        <IconChartBar
-                            className='icon'
+                            <span className='label'>Khách Hàng</span>
+                        </NavLink>
+                    </Menu.Item>
+                ) : (
+                    ''
+                )}
+                {jwt.getUserRole() === 'MANAGER' ? (
+                    <Menu.Item key='8'>
+                        <NavLink
+                            to='/admins/statistics/overview'
                             style={{
                                 backgroundColor:
                                     page === 'admins/statistics/overview' ||
                                     page === 'admins/statistics/ticket-sales' ||
                                     page === 'admins/statistics/popular-flight' ||
                                     page === 'admins/statistics/ticket-class-revenue'
-                                        ? color
+                                        ? '#fff'
                                         : '',
-                                color:
-                                    page === 'admins/statistics/overview' ||
-                                    page === 'admins/statistics/ticket-sales' ||
-                                    page === 'admins/statistics/popular-flight' ||
-                                    page === 'admins/statistics/ticket-class-revenue'
-                                        ? color
-                                        : ''
+                                boxShadow: '0 20px 27px rgb(0 0 0 / 5%)'
                             }}
-                        />
+                        >
+                            <IconChartBar
+                                className='icon'
+                                style={{
+                                    backgroundColor:
+                                        page === 'admins/statistics/overview' ||
+                                        page === 'admins/statistics/ticket-sales' ||
+                                        page === 'admins/statistics/popular-flight' ||
+                                        page === 'admins/statistics/ticket-class-revenue'
+                                            ? color
+                                            : '',
+                                    color:
+                                        page === 'admins/statistics/overview' ||
+                                        page === 'admins/statistics/ticket-sales' ||
+                                        page === 'admins/statistics/popular-flight' ||
+                                        page === 'admins/statistics/ticket-class-revenue'
+                                            ? color
+                                            : ''
+                                }}
+                            />
 
-                        <span className='label'>Thống Kê</span>
-                    </NavLink>
-                </Menu.Item>
+                            <span className='label'>Thống Kê</span>
+                        </NavLink>
+                    </Menu.Item>
+                ) : (
+                    ''
+                )}
             </Menu>
         </>
     )

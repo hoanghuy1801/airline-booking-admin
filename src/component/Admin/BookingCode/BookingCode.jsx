@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
-import { Table, Space, Input, Row, Col, Button, Menu, Tag, Select, Dropdown, Typography } from 'antd'
+import { Table, Space, Input, Row, Col, Button, Menu, Tag, Select, Dropdown, Typography, DatePicker } from 'antd'
 import { IconFilterFilled } from '@tabler/icons-react'
 
 import { useNavigate } from 'react-router-dom'
 import { openNotification } from '../../../utils/Notification'
 import { CancelBooking, getBooking, getBookingById } from '../../../services/apiAdmin'
 import { changeStatusAdmin, changeStatusBookingPayment } from '../../../utils/utils'
-import { formatCurrency, formatDateString } from '../../../utils/format'
+import { formatCurrency, formatDate, formatDateString } from '../../../utils/format'
 import { getAirports } from '../../../services/apiAdmin'
 import 'dayjs/locale/vi'
 import { IconDotsVertical } from '@tabler/icons-react'
@@ -37,12 +37,14 @@ const BookingCode = () => {
     const [sourceAirportId, setSourceAirportId] = useState(0)
     const [destinationAirportId, setDestinationAirportId] = useState(0)
     const [hidenSearch, setHidenSearch] = useState(false)
+    const [departureDate, setDepartureDate] = useState('')
+    const [arrivalDate, setArrivalDate] = useState('')
     const dispastch = useDispatch()
     // eslint-disable-next-line no-unused-vars
     const onChange = (pagination, filters, sorter, extra) => {
         setCurrentPage(pagination.current)
     }
-
+    console.log(listBooking)
     const navigate = useNavigate()
     useEffect(() => {
         fechListBooking()
@@ -66,13 +68,22 @@ const BookingCode = () => {
         setDestinationAirportId(value)
     }
 
+    const onChangeDepartureDate = (dates, dateStrings) => {
+        setDepartureDate(dateStrings)
+    }
+    const onChangeArrivalDate = (dates, dateStrings) => {
+        setArrivalDate(dateStrings)
+    }
+
     const fechListBooking = async () => {
         const data = {
             page: currentPage,
             size: 10,
             bookingCode: textSearch,
             sourceAirportId: sourceAirportId === 0 ? '' : sourceAirportId,
-            destinationAirportId: destinationAirportId === 0 ? '' : destinationAirportId
+            destinationAirportId: destinationAirportId === 0 ? '' : destinationAirportId,
+            fromDate: formatDate(departureDate) === 'Invalid date' ? '' : formatDate(departureDate),
+            toDate: formatDate(arrivalDate) === 'Invalid date' ? '' : formatDate(arrivalDate)
         }
         try {
             let res = await getBooking(status, data)
@@ -152,6 +163,20 @@ const BookingCode = () => {
                 return formatDateString(value)
             },
 
+            align: 'center'
+        },
+        {
+            title: 'Hạng Ghế',
+            dataIndex: 'seat',
+            sorter: (a, b) => {
+                let nameA = a?.seat?.seatName
+                let nameB = b?.seat?.seatName
+                return nameA.localeCompare(nameB)
+            },
+            // eslint-disable-next-line no-unused-vars
+            render: (value, _record) => {
+                return _record?.seat?.seatName
+            },
             align: 'center'
         },
         {
@@ -363,6 +388,22 @@ const BookingCode = () => {
                                 </Option>
                             ))}
                         </Select>
+                    </Col>
+                    <Col span={4}>
+                        <DatePicker
+                            style={{ width: '90%' }}
+                            placeholder={'Từ Ngày'}
+                            onChange={onChangeDepartureDate}
+                            format='DD/MM/YYYY'
+                        />
+                    </Col>
+                    <Col span={4}>
+                        <DatePicker
+                            style={{ width: '90%' }}
+                            placeholder={'Đến Ngày'}
+                            format='DD/MM/YYYY'
+                            onChange={onChangeArrivalDate}
+                        />
                     </Col>
                     <Col span={4}>
                         <Button className='btn-apply' onClick={() => hanldeApply()}>
